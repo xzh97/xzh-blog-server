@@ -1,0 +1,19 @@
+{
+  "name": "xzh.com.server",
+  "version": "1.0.0",
+  "description": "project xzh.com's server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xzh97/xzh.com.server.git"
+  },
+  "author": "xzh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xzh97/xzh.com.server/issues"
+  },
+  "homepage": "https://github.com/xzh97/xzh.com.server#readme"
+}
