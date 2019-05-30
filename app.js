@@ -1,6 +1,10 @@
 const Koa = require('koa');
-
+const koaBody = require('koa-body');
+const koaRouter = require('koa-router');
 const app = new Koa();
+
+app.use(koaBody);
+app.use(koaRouter);
 
 app.use(async (ctx, next) => {
     await next();
