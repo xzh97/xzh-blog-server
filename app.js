@@ -1,20 +1,29 @@
 const Koa = require('koa');
+const config = require('./config/index.js')
 const koaBody = require('koa-body');
-const koaRouter = require('koa-router')();
 
-const blogRouter = require('./routes/')
-const config = require('./config/index')
+const koaRouter = require('koa-router')
+const router = new koaRouter();
+//const blogRouter = require('./routes/blog');
+
 const app = new Koa();
 
-app.use(koaBody);
-app.use(koaRouter.routes())
+//middleware
+//app.use(koaBody);
+app.use(koaRouter);
 
-app.use(async (ctx, next) => {
+//router
+//blogRouter(app)
+
+//example
+router.get('/',async ctx => {
     console.log(ctx)
     ctx.response.type = 'text/html';
-    ctx.response.body = '<h1>Hello, koa2!</h1>';
-    await next();
+    ctx.response.html = '<h1>HELLO WORLD</h1>'
+})
+
+app.use(require('./routes/blog.js'),router.routes(),router.allowedMethods());
+
+app.listen(config.port,() => {
+    console.log(`server is running at http://localhost:${config.port}`);
 });
-app.listen(config.port);
-console.log(koaRouter.routes());
-console.log('app started at port 3000...');

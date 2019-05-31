@@ -1,6 +1,9 @@
 const router = require('koa-router')();
-const blogController = require('../controller/blogController');
+const blogController = require('../controller/blogController.js');
 
-router.get('/api/blog/list', blogController.getBlogList());
-router.get('/api/blog/detail/:id',blogController.getBlogDetail());
-module.exports = router;
+module.exports = app => {
+    router.get('/api/blog/list', blogController.getBlogList);
+    router.get('/api/blog/detail/:id',blogController.getBlogDetail);
+
+    app.use(router,router.routes(),router.allowedMethods())
+}

@@ -1,10 +1,16 @@
+const blogModel = require('../model/blog.js');
 const blogController = {
-    getBlogList(){
-        return 'this is getBlogList method'
+    async getBlogList(ctx){
+        console.log(ctx);
+        await blogModel.getBlogListModel().then(result => {
+            console.log(result);
+        })
     },
     getBlogDetail: async(ctx) => {
-        let id = '1001';
-        return `this is getBlogDetail method, id = ${id}`
+        await blogModel.getBlogDetailModel().then(result => {
+            console.log(result);
+        })
+
     }
 }
 module.exports = blogController;
