@@ -1,2 +1,6 @@
-const blogRoutes = require('./blog');
-export default {}
+const router = require('koa-router')();
+const blogRouter = require('./blog');
+
+module.exports = {
+    blogRouter
+}

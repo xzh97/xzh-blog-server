@@ -8,3 +8,4 @@ const config = {
         HOST: 'localhost'
     }
 }
+module.exports = config

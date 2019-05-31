@@ -4,7 +4,8 @@
   "description": "project xzh.com's server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/xzh97/xzh.com.server/issues"
   },
-  "homepage": "https://github.com/xzh97/xzh.com.server#readme"
+  "homepage": "https://github.com/xzh97/xzh.com.server#readme",
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-router": "^7.4.0"
+  }
 }

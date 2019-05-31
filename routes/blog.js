@@ -1,6 +1,6 @@
-const koaRouter = require('koa-router');
-const router = new koaRouter();
+const router = require('koa-router')();
+const blogController = require('../controller/blogController');
 
-router.get('/api/blog/list',async (ctx) => {
-    
-})
+router.get('/api/blog/list', blogController.getBlogList());
+router.get('/api/blog/detail/:id',blogController.getBlogDetail());
+module.exports = router;
