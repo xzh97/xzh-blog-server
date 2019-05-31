@@ -1,9 +1,23 @@
 const router = require('koa-router')();
 const blogController = require('../controller/blogController.js');
 
-module.exports = app => {
-    router.get('/api/blog/list', blogController.getBlogList);
-    router.get('/api/blog/detail/:id',blogController.getBlogDetail);
+/**
+ * @description 博客列表
+ */
+router.get('/api/blog/list', /*blogController.getBlogList*/async (ctx, next) => {
+    await next();
+    ctx.response.type = 'text/html';
+    ctx.response.body = '<h1>this is blog list</h1>';
+});
 
-    app.use(router,router.routes(),router.allowedMethods())
-}
+/**
+ * @description 博客详情
+ * @param id blogID
+ */
+router.get('/api/blog/detail/:id',/*blogController.getBlogDetail*/async (ctx, next) => {
+    await next();
+    ctx.response.type = 'text/html';
+    ctx.response.body = '<h1>this is blog detail</h1>';
+});
+
+module.exports = router;

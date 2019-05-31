@@ -1,29 +1,12 @@
 const Koa = require('koa');
-const config = require('./config/index.js')
-const koaBody = require('koa-body');
 
-const koaRouter = require('koa-router')
-const router = new koaRouter();
-//const blogRouter = require('./routes/blog');
-
+// 创建一个Koa对象表示web app本身:
 const app = new Koa();
+let router = require('./routes/blog.js');
 
-//middleware
-//app.use(koaBody);
-app.use(koaRouter);
 
-//router
-//blogRouter(app)
+app.use(router.routes());
 
-//example
-router.get('/',async ctx => {
-    console.log(ctx)
-    ctx.response.type = 'text/html';
-    ctx.response.html = '<h1>HELLO WORLD</h1>'
-})
-
-app.use(require('./routes/blog.js'),router.routes(),router.allowedMethods());
-
-app.listen(config.port,() => {
-    console.log(`server is running at http://localhost:${config.port}`);
-});
+// 在端口3000监听:
+app.listen(3000);
+console.log('app started at port 3000...');

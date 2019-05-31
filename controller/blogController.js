@@ -6,11 +6,10 @@ const blogController = {
             console.log(result);
         })
     },
-    getBlogDetail: async(ctx) => {
+    async getBlogDetail(ctx) {
         await blogModel.getBlogDetailModel().then(result => {
             console.log(result);
         })
-
     }
 }
 module.exports = blogController;
