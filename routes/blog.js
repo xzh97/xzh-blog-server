@@ -4,11 +4,7 @@ const blogController = require('../controller/blogController.js');
 /**
  * @description 博客列表
  */
-router.get('/api/blog/list', /*blogController.getBlogList*/async (ctx, next) => {
-    await next();
-    ctx.response.type = 'text/html';
-    ctx.response.body = '<h1>this is blog list</h1>';
-});
+router.get('/api/blog/list', blogController.getBlogList);
 
 /**
  * @description 博客详情
