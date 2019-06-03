@@ -60,7 +60,7 @@ const blogModel = {
             }
             setTimeout(()=>{
                 resolve(res) 
-            },1000)
+            },500)
         } )
     },
     getBlogDetailModel: async () => {
@@ -77,7 +77,7 @@ const blogModel = {
             };
             setTimeout(()=>{
                 resolve(res) 
-            },1000)
+            },500)
         } )
     }
 }
