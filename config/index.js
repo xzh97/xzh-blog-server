@@ -1,11 +1,12 @@
 const config = {
     port: 3000, //监听端口,
     database:{
-        DATABASE: 'xzh-dev',
-        USERNAME: 'root',
-        PASSWORD: 'z995194437',
-        PORT: '3306',
-        HOST: 'localhost'
+        database: 'xzh',
+        user: 'root',
+        password: '12345678',
+        authentication:'12345678',
+        port: '3306',
+        host: 'localhost'
     },
 }
 module.exports = Object.freeze(config);

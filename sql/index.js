@@ -4,16 +4,17 @@ const mysql = require('mysql');
 const pool = mysql.createPool(config.database); //创建连接池
 
 let query = (sql,values) => {
+    console.log(sql);
     return new Promise( (resolve,reject) => {
         //建立连接
-        pool.getConnections((err,connection) => {
+        pool.getConnection((err,connection) => {
             if(err){
-                reject({errMsg:'sql出错'})
+                reject(err);
             }
             else{
                 connection.query(sql,values, (err,rows) => {
                     if(err){
-                        reject({errMsg:'sql出错'})
+                        reject(err)
                     }
                     else{
                         resolve(rows)
@@ -24,3 +25,4 @@ let query = (sql,values) => {
         })
     } )
 }
+module.exports = query;
