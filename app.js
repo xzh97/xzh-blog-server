@@ -20,6 +20,16 @@ let router = require('./routes/blog.js');
     ctx.set('Access-Control-Max-Age', 3600 * 24);
  await next();
 });*/
+
+//get和post请求参数
+app.use(async (ctx, next) => {
+    ctx.params = {
+      ...ctx.request.body,
+      ...ctx.query
+    };
+    await next();
+  });
+
 // 配置静态资源加载中间件
 app.use(koaStatic(path.join(__dirname , './public')))
 

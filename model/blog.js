@@ -1,4 +1,6 @@
 const blogSqlMethods = require('../sql/blog');
+const getErrorMessage = require('../common/message');
+const {mapToKey} = require('../common/map');
 
 const blogModel = {
     /**
@@ -11,7 +13,7 @@ const blogModel = {
         let res = {
                 hasNextPage:true,
                 hasPrevPage:false,
-                data:data
+                data:mapToKey(data)
             }
         return res
     },
@@ -35,6 +37,15 @@ const blogModel = {
                 resolve(res) 
             },500)
         } )
-    }
+    },
+    createNewBlog: async (values) => {
+        let data = await blogSqlMethods.createNewBlog('xzh_blog',values);
+        if(data.affectedRows > 0){
+            return getErrorMessage('CREATE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('CREATE_FAILED');
+        }
+    },
 }
 module.exports = blogModel;

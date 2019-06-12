@@ -1,4 +1,5 @@
 const router = require('koa-router')();
+const koaBody = require('koa-body');
 const blogController = require('../controller/blogController.js');
 
 /**
@@ -15,5 +16,10 @@ router.get('/api/blog/detail/:id',/*blogController.getBlogDetail*/async (ctx, ne
     ctx.response.type = 'text/html';
     ctx.response.body = '<h1>this is blog detail</h1>';
 });
+
+/**
+ * @description 创建博客 
+ */
+router.post('/api/blog/create',blogController.createNewBlog);
 
 module.exports = router;
