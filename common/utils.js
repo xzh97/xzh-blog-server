@@ -5,7 +5,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-11 22:54:01 
- * Last modified  : 2019-06-12 21:41:54
+ * Last modified  : 2019-06-13 22:56:31
  */
 
 /**
@@ -58,7 +58,29 @@ function addZero(value){
     value = value < 9 ?　`0${value}` : `${value}`;
     return value
 }
+/**
+ * @description 分页工具
+ * @param {*} total 数据总量
+ * @param {*} data 查询到的本页数据
+ * @param {*} size 每一页最大数据量
+ * @return object
+ */
+const pagination = (total,data,currentPage,size) => {
+    console.log(total.length,data.length,currentPage,size);
+    let hasNextPage = true,hasPrevPage = true,totalLength = total.length,length = data.length;
+    //无下一页
+    if( length < size || totalLength <= size || ( length === size && currentPage*size === totalLength )){
+        hasNextPage = false;
+    }
+    //无上一页
+    if(currentPage === 1) hasPrevPage = false;
+    return {
+        hasNextPage,
+        hasPrevPage,
+    }
+}
 
 module.exports = {
-    dateFormat
+    dateFormat,
+    pagination
 }

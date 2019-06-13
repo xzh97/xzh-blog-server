@@ -11,11 +11,7 @@ router.get('/api/blog/list', blogController.getBlogList);
  * @description 博客详情
  * @param id blogID
  */
-router.get('/api/blog/detail/:id',/*blogController.getBlogDetail*/async (ctx, next) => {
-    await next();
-    ctx.response.type = 'text/html';
-    ctx.response.body = '<h1>this is blog detail</h1>';
-});
+router.get('/api/blog/detail/:blogOID',blogController.getBlogDetail);
 
 /**
  * @description 创建博客 
