@@ -4,7 +4,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-12 21:36:13 
- * Last modified  : 2019-06-12 23:14:52
+ * Last modified  : 2019-06-13 20:42:58
  */
 
 /**
@@ -36,7 +36,7 @@ const mapToColumn = (values) => {
     let columnStr = '',valueStr = '';
     keys.forEach(key => {
         columnStr += `${toSqlMap[key] || key},`;
-        valueStr += `"${toSqlValue(values[key])}",`;
+        valueStr += `'${toSqlValue(values[key])}',`;
     });
     columnStr = columnStr.substr(0,columnStr.length-1);
     valueStr = valueStr.substr(0,valueStr.length-1);
