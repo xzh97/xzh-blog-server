@@ -43,8 +43,6 @@ local_tool/
 autoComplete.js
 autoJson.js
 getChinese.js
-message.js
-src/containers/new-message.js
 yinru.js
 src/config/dist.js
 */.DS_Store
