@@ -6,6 +6,7 @@ const uuid = require('uuid');
 
 const blogModel = {
     /**
+     * @description 文章列表数据
      * @return {hasNextPage:boolean:array:boolean，data:array}
      */
     getBlogListModel:  async (limit) => {
@@ -23,14 +24,19 @@ const blogModel = {
         return res
     },
     /**
-     * @description 暂时先不写， 先写新增去了 不然么得数据
-     * @return {hasNextPage:boolean:array:boolean，data:array}
+     * @description 文章详情
+     * @return Object {}
      */
     getBlogDetailModel: async (params) => {
         console.log(params);
         let data = await blogSqlMethods.getBlogDetail('xzh_blog',params.blogOID);
         return mapToKey(data);
     },
+
+    /**
+     * @description 新增文章
+     * @return {errCode,errMsg}
+     */
     createNewBlogModel: async (values) => {
         values.blogOID = uuid.v1();
         values.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
