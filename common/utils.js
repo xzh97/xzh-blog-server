@@ -5,7 +5,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-11 22:54:01 
- * Last modified  : 2019-06-13 22:56:31
+ * Last modified  : 2019-06-17 23:19:11
  */
 
 /**
@@ -26,7 +26,11 @@
  * Last modified  : 2019-06-11 22:48:49
  */
 
-//日期格式化
+/**
+ * @description 日期格式化
+ * @param {} date 
+ * @param {*} format 
+ */
 const dateFormat = (date, format='yyyy-MM-dd') => {
     let d = new Date(date);
     if(d.toString() === 'Invalid Date'){ // ios safari下 2019-04-04这种解析不出来

@@ -4,7 +4,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-12 21:36:13 
- * Last modified  : 2019-06-13 22:57:04
+ * Last modified  : 2019-06-17 23:24:39
  */
 
 /**
@@ -27,9 +27,10 @@ const toKeyMap = {
 }
 
 /**
- * @summary 映射函数
+ * @summary 映射函数 
+ * @description ex: INSERT INTO ${table} (${columns.columnStr}) VALUE (${columns.valueStr});
  * @param values object
- * @return object string
+ * @return object {数据库列名,数据库值}
  */
 const mapToColumn = (values) => {
     let keys = Object.keys(values);
@@ -47,7 +48,8 @@ const mapToColumn = (values) => {
 }
 
 /**
- * @summary 映射函数
+ * @summary 映射函数 把查到的数据库数据中，带有 '_'的 都改为 大写字母
+ * @description  'blog_oid' -----> 'blogOID'
  * @param data array
  * @return array
  */
@@ -62,6 +64,7 @@ const mapToKey = (data) => {
 }
 
 /**
+ * @summary 数组提取value
  * @param value
  * @return 
  */
@@ -82,7 +85,25 @@ toSqlValue = (value) => {
     }
     return '';
 }
+
+/**
+ * @summary 映射函数
+ * @param data array
+ * @return array
+ */
+const mapToKeyValue = (obj) => {
+    let str = '';
+    for(let key in obj){
+        str += `${toSqlMap[key] || key}='${toSqlValue(obj[key])}',`
+    }
+    
+    return str.substr(0,str.length-1);
+}
+
 module.exports = {
     mapToColumn,
     mapToKey,
+    mapToKeyValue,
+    toSqlValue,
+    toSqlMap,
 }

@@ -1,6 +1,6 @@
 const blogSqlMethods = require('../sql/blog');
 const getErrorMessage = require('../common/message');
-const {mapToKey} = require('../common/map');
+const {mapToKey, toSqlValue, toSqlMap} = require('../common/map');
 const {dateFormat, pagination} = require('../common/utils');
 const uuid = require('uuid');
 
@@ -29,8 +29,8 @@ const blogModel = {
      */
     getBlogDetailModel: async (params) => {
         console.log(params);
-        let data = await blogSqlMethods.getBlogDetail('xzh_blog',params.blogOID);
-        return mapToKey(data);
+        let data = await blogSqlMethods.getBlogDetail('xzh_blog',params.blogOID);        
+        return mapToKey(data)
     },
 
     /**
@@ -41,9 +41,7 @@ const blogModel = {
         values.blogOID = uuid.v1();
         values.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
         values.lastUpdatedTime = values.createTime;
-        values.categroy = JSON.parse(values.categroy);
-        values.private = Number(values.private) || 0;
-        values.author = 'xzh';
+        values.categroy = toSqlValue(JSON.parse(values.categroy));
         values.description = values.description || values.content.substr(0,100)+'...';
         let data = await blogSqlMethods.createNewBlog('xzh_blog',values);
         if(data.affectedRows > 0){
@@ -53,5 +51,25 @@ const blogModel = {
             return getErrorMessage('CREATE_FAILED');
         }
     },
+
+    /**
+     * @description 修改文章
+     * @return {errCode,errMsg}
+     */
+    updateBlogModel: async (values) => {
+        let blogOID = values.blogOID;
+        values.categroy = JSON.parse(values.categroy);
+        values.description = values.description || values.content.substr(0,100)+'...';
+        delete values.blogOID;
+        let data = await blogSqlMethods.updateBlog('xzh_blog',values,blogOID);
+        if(data.affectedRows > 0){
+            return getErrorMessage('UPDATE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('UPDATE_FAILED');
+        }
+    },
+
+    
 }
 module.exports = blogModel;
