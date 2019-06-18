@@ -41,7 +41,8 @@ const blogModel = {
         values.blogOID = uuid.v1();
         values.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
         values.lastUpdatedTime = values.createTime;
-        values.categroy = toSqlValue(JSON.parse(values.categroy));
+        values.categroy = toSqlValue(values.categroy);
+        values.author = 'xzh';
         values.description = values.description || values.content.substr(0,100)+'...';
         let data = await blogSqlMethods.createNewBlog('xzh_blog',values);
         if(data.affectedRows > 0){
@@ -58,7 +59,7 @@ const blogModel = {
      */
     updateBlogModel: async (values) => {
         let blogOID = values.blogOID;
-        values.categroy = JSON.parse(values.categroy);
+        values.categroy = values.categroy;
         values.description = values.description || values.content.substr(0,100)+'...';
         delete values.blogOID;
         let data = await blogSqlMethods.updateBlog('xzh_blog',values,blogOID);

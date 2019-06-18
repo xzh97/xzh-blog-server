@@ -26,7 +26,7 @@ const blogController = {
     },
     updateBlog:async (ctx,next) => {
         let obj = ctx.params;
-        console.log('update blog controller object',obj);
+        console.log('blogController updateBlog obj',obj);
         await blogModel.updateBlogModel(obj).then(result => {
             ctx.response.body = result;
             next()
