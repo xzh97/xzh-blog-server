@@ -1,29 +1,9 @@
 /**
- * long description for the file
- *
- * @summary short description for the file
- * @author xzh xzh19971005@163.com
- *
- * Created at     : 2019-06-11 22:54:01 
- * Last modified  : 2019-06-17 23:19:11
- */
-
-/**
- * long description for the file
- *
- * @summary short description for the file
- * @author xzh xzh19971005@163.com
- *
- * Created at     : 2019-06-11 22:53:56 
- * Last modified  : 2019-06-11 22:53:56 
- */
-
-/**
- * @summary 常用的工具
- * @author xzh xzh19971005@163.com
+ * @summary 工具库
+ * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-06-11 22:48:49
+ * Last modified  : 2019-06-19 21:49:35
  */
 
 /**
@@ -64,16 +44,20 @@ function addZero(value){
 }
 /**
  * @description 分页工具
- * @param {*} total 数据总量
- * @param {*} data 查询到的本页数据
- * @param {*} size 每一页最大数据量
+ * @param {array} total 数据总量
+ * @param {array} data 查询到的本页数据
+ * @param {number} currentPage 当前页码
+ * @param {number} size 每一页最大数据量
  * @return object
  */
 const pagination = (total,data,currentPage,size) => {
-    console.log(total.length,data.length,currentPage,size);
-    let hasNextPage = true,hasPrevPage = true,totalLength = total.length,length = data.length;
+    console.log('pagination params',total,data.length,currentPage,size);
+    let hasNextPage = true,
+        hasPrevPage = true,
+        length = data.length,
+        totalPage = Math.ceil(total/size);
     //无下一页
-    if( length < size || totalLength <= size || ( length === size && currentPage*size === totalLength )){
+    if( length < size || total <= size || ( length === size && currentPage*size === total )){
         hasNextPage = false;
     }
     //无上一页
@@ -81,10 +65,33 @@ const pagination = (total,data,currentPage,size) => {
     return {
         hasNextPage,
         hasPrevPage,
+        totalPage,
     }
 }
 
+/** 
+ * @summary 判断是否是空对象
+ * @param {object} 判断对象
+ * @return {boolean}
+*/
+const isEmptyObj = (obj) => {
+    for(let key in obj){
+        return false;
+    }
+    return true;
+}
+
+/** 
+ * @summary 检查前端传过来html内容
+ * @param {string} str
+ * @return {string}
+*/
+const checkHtmlContent = (str) => {
+    return str;
+}
 module.exports = {
     dateFormat,
-    pagination
+    pagination,
+    isEmptyObj,
+    checkHtmlContent
 }

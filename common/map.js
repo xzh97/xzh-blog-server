@@ -27,24 +27,30 @@ const toKeyMap = {
 }
 
 /**
- * @summary 映射函数 
- * @description ex: INSERT INTO ${table} (${columns.columnStr}) VALUE (${columns.valueStr});
- * @param values object
- * @return object {数据库列名,数据库值}
+ * 
+ * @param {object} values 
+ * @return {string} sql表的列名字符串
  */
-const mapToColumn = (values) => {
+const mapToSqlKey = (values) => {
+    let keyStr = '';
+    Object.keys(values).forEach(key => {
+        keyStr += `${toSqlMap[key] || key},`;
+    });
+    return keyStr.substr(0,keyStr.length-1)
+}
+
+/**
+ * 
+ * @param {object} values 
+ * @return {string} sql表的值名字符串
+ */
+const mapToSqlValue = (values) => {
     let keys = Object.keys(values);
-    let columnStr = '',valueStr = '';
+    let valueStr = '';
     keys.forEach(key => {
-        columnStr += `${toSqlMap[key] || key},`;
         valueStr += `'${toSqlValue(values[key])}',`;
     });
-    columnStr = columnStr.substr(0,columnStr.length-1);
-    valueStr = valueStr.substr(0,valueStr.length-1);
-    return {
-        columnStr,
-        valueStr
-    }
+    return valueStr.substr(0,valueStr.length-1)
 }
 
 /**
@@ -101,7 +107,8 @@ const mapToKeyValue = (obj) => {
 }
 
 module.exports = {
-    mapToColumn,
+    mapToSqlValue,
+    mapToSqlKey,
     mapToKey,
     mapToKeyValue,
     toSqlValue,
