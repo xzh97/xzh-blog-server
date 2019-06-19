@@ -6,7 +6,7 @@
  * @description 先暂时这样子写吧，看之后的sql语句难度，如果比较容易的话， 就把这些方法 写成一个就好了。 主要是怕比较复杂的sql
  *
  * Created at     : 2019-06-05 21:12:13 
- * Last modified  : 2019-06-19 21:28:56
+ * Last modified  : 2019-06-19 23:06:39
  */
 
 const query = require('./index');
@@ -28,7 +28,7 @@ const getBlogListCount = async (table) => {
 }
 
 const getBlogDetail = async (table,blogOID) => {
-    let fieldsStr = 'title,content,categroy,type,private,blog_oid,read_number,comment_count,last_updated_time';
+    let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time';
     let sql = `SELECT ${fieldsStr} FROM ${table} WHERE blog_oid='${blogOID}'`;
     return await query(sql)
 }

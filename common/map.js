@@ -4,7 +4,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-12 21:36:13 
- * Last modified  : 2019-06-17 23:24:39
+ * Last modified  : 2019-06-19 23:11:12
  */
 
 /**
@@ -80,11 +80,14 @@ toSqlValue = (value) => {
         return value;
     }
     else if(Array.isArray(value)){
-        let valueStr = '';
-        value.forEach(elem => {
-            valueStr += elem.value +',';
-        });
-        return valueStr.substr(0,valueStr.length-1);
+        if(value.length){
+            let valueStr = '';
+            value.forEach(elem => {
+                valueStr += elem.value +',';
+            });
+            return valueStr.substr(0,valueStr.length-1);
+        }
+        return '';  
     }
     else if(typeof value === 'object' && value !== null){
         return value.value;

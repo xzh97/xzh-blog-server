@@ -1,30 +1,30 @@
 const config = require('../config/index');
 const mysql = require('mysql');
-const {isEmptyObj} = require('../common/utils');
+const { isEmptyObj } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
 
-const query = (sql,values) => {
+const query = (sql, values) => {
     console.log(sql);
-    return new Promise( (resolve,reject) => {
+    return new Promise((resolve, reject) => {
         //建立连接
-        pool.getConnection((err,connection) => {
-            if(err){
+        pool.getConnection((err, connection) => {
+            if (err) {
                 reject(err);
             }
-            else{
-                connection.query(sql,values, (err,rows) => {
-                    if(err){
+            else {
+                connection.query(sql, values, (err, rows) => {
+                    if (err) {
                         reject(err)
                     }
-                    else{
+                    else {
                         resolve(rows)
                     }
                     connection.release() //关闭连接
                 })
             }
         })
-    } )
+    })
 }
 
 /**
@@ -33,13 +33,13 @@ const query = (sql,values) => {
  * @param {string} selectStr 表数据列
  * @param {object} limit 是否分页
  */
-const getDataList = async (table,selectStr = '*',limit = {}) => {
+const getDataList = async (table, selectStr = '*', limit = {}) => {
     let _sql = '';
-    if(isEmptyObj(limit)){
+    if (isEmptyObj(limit)) {
         _sql = `SELECT ${selectStr} FROM ${table}`;
     }
-    else{
-        _sql = `SELECT ${selectStr} FROM ${table} LIMIT ${(limit.page-1)*limit.size},${limit.size}`;
+    else {
+        _sql = `SELECT ${selectStr} FROM ${table} LIMIT ${(limit.page - 1) * limit.size},${limit.size}`;
     }
 
     return await query(_sql);
@@ -62,7 +62,7 @@ const getDataListCount = async (table) => {
  * @param {string} key 查询条件key名
  * @param {string} value 查询条件value值
  */
-const getData = async (table,selectStr = '*',key,value) => {
+const getData = async (table, selectStr = '*', key, value) => {
     let _sql = `SELECT ${selectStr} FROM ${table} WHERE ${key}='${value}'`;
 
     return await query(_sql);
@@ -74,7 +74,7 @@ const getData = async (table,selectStr = '*',key,value) => {
  * @param {string} keyStr 列名
  * @param {string} valueStr 列对应的数据
  */
-const createData = async (table,keyStr,valueStr) => {
+const createData = async (table, keyStr, valueStr) => {
     let _sql = `INSERT INTO ${table} (${keyStr}) VALUE (${valueStr});`;
     return await query(_sql)
 }
@@ -86,8 +86,8 @@ const createData = async (table,keyStr,valueStr) => {
  * @param {string} key 更新条件key
  * @param {string} value 更新条件value
  */
-const updateData = async (table,keyValueStr,key,value) => {
-    let _sql = `UPDATE ${table} SET ${keyValueStr} WHERE ${key}=${value};`;
+const updateData = async (table, keyValueStr, key, value) => {
+    let _sql = `UPDATE ${table} SET ${keyValueStr} WHERE ${key}='${value}';`;
     return await query(_sql)
 }
 module.exports = {

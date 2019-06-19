@@ -28,7 +28,7 @@ const blogModel = {
      * @return Object {}
      */
     getBlogDetailModel: async (params) => {
-    let fieldsStr = 'title,content,categroy,type,private,blog_oid,read_number,comment_count,last_updated_time';
+    let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time';
         let data = await getData('xzh_blog',fieldsStr,'blog_oid',params.blogOID);        
         return mapToKey(data)
     },
