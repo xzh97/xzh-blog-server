@@ -4,7 +4,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-12 21:36:13 
- * Last modified  : 2019-06-19 23:11:12
+ * Last modified  : 2019-06-22 00:14:31
  */
 
 /**
@@ -16,6 +16,7 @@ const toSqlMap = {
     lastUpdatedTime:'last_updated_time',
     readNumber:'read_number',
     commentCount:'comment_count',
+    categoryOID:'category_oid'
 }
 
 const toKeyMap = {
@@ -24,6 +25,7 @@ const toKeyMap = {
     'last_updated_time':'lastUpdatedTime',
     'read_number':'readNumber',
     'comment_count':'commentCount',
+    'category_oid':'categoryOID',
 }
 
 /**

@@ -4,7 +4,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-06 23:19:46 
- * Last modified  : 2019-06-13 20:43:08
+ * Last modified  : 2019-06-20 23:06:40
  */
 const errorMessageMap = {
     'CREATE_SUCCESS': '创建成功',
@@ -13,6 +13,7 @@ const errorMessageMap = {
     'UPDATE_FAILED': '更新失败',
     'DELETE_SUCCESS': '删除成功',
     'DELETE_FAILED': '删除失败',
+    'SYSTEM_ERROR':'系统错误',
 }
 const errorCodeMap = {
     'CREATE_SUCCESS': '10001',
@@ -21,6 +22,7 @@ const errorCodeMap = {
     'UPDATE_FAILED': '10004',
     'DELETE_SUCCESS': '10005',
     'DELETE_FAILED': '10006',
+    'SYSTEM_ERROR': '10007',
 }
 
 const getErrorMessage = (key)=>{

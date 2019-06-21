@@ -23,4 +23,25 @@ router.post('/api/blog/create',blogController.createNewBlog);
  */
 router.put('/api/blog/update',blogController.updateBlog);
 
+/**
+ * @description 文章分类列表
+ */
+router.get('/api/blog/category/list', blogController.getCategoryList);
+
+/**
+ * @description 文章分类详情
+ * @param id blogID
+ */
+router.get('/api/blog/category/detail/:blogOID',blogController.getCategoryDetail);
+
+/**
+ * @description 创建文章分类 
+ */
+router.post('/api/blog/category/create',blogController.createNewCategory);
+
+/**
+ * @description 更新文章分类 
+ */
+router.put('/api/blog/category/update',blogController.updateCategory);
+
 module.exports = router;

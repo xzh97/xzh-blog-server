@@ -3,7 +3,7 @@
  * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-06-19 21:49:35
+ * Last modified  : 2019-06-20 23:01:26
  */
 
 /**
@@ -82,16 +82,27 @@ const isEmptyObj = (obj) => {
 }
 
 /** 
- * @summary 检查前端传过来html内容
+ * @summary 判断是否是空数组
+ * @param {object} 判断数组
+ * @return {boolean}
+*/
+const isEmptyArray = (arr) => {
+    if(Array.isArray(arr) && !arr.length) return true
+    return false;
+}
+
+/** 
+ * @summary 去掉blog内容里的标签 
  * @param {string} str
  * @return {string}
 */
-const checkHtmlContent = (str) => {
-    return str;
+const removeTag = (str) => {
+    return str.replace((/<[^>]+>/g, "")).substr(0,100);
 }
 module.exports = {
     dateFormat,
     pagination,
     isEmptyObj,
-    checkHtmlContent
+    removeTag,
+    isEmptyArray
 }
