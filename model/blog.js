@@ -1,4 +1,4 @@
-const {getDataListCount, getDataList, getData, createData, updateData} = require('../sql/index');
+const {getDataListCount, getDataList, getData, createData, updateData, deleteData} = require('../sql/index');
 const getErrorMessage = require('../common/message');
 const {mapToKey, mapToSqlKey, mapToSqlValue, mapToKeyValue} = require('../common/map');
 const {dateFormat, pagination, checkHtmlContent, removeTag} = require('../common/utils');
@@ -61,15 +61,31 @@ const blogModel = {
      */
     updateBlogModel: async (values) => {
         let blogOID = values.blogOID;
-        values.content = checkHtmlContent(values.content);
         values.description = removeTag(values.content);
         let updateStr = mapToKeyValue(values);
         let data = await updateData('xzh_blog',updateStr,'blog_oid',blogOID);
+        console.log('updateBlogModel data',data);
         if(data.affectedRows > 0){
             return getErrorMessage('UPDATE_SUCCESS');
         }
         else{
             return getErrorMessage('UPDATE_FAILED');
+        }
+    },
+
+    /**
+     * @description 删除文章
+     * @return {errCode,errMsg}
+     */
+    deleteBlogModel: async (values) => {
+        let blogOID = values.blogOID;
+        let data = await deleteData('xzh_blog','blog_oid',blogOID);
+        console.log('deleteBlogModel data',data);
+        if(data.affectedRows > 0){
+            return getErrorMessage('DELETE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('DELETE_FAILED');
         }
     },
 
@@ -79,31 +95,31 @@ const blogModel = {
      * @return {data:array}
      */
     getCategoriesModel:  async (limit) => {
-        let keys = 'category_oid,name,create_time';
+        let keys = 'category_oid,name,create_time,count';
         let data = await getDataList('xzh_blog_category',keys,limit);
-        //let total = await getDataListCount('xzh_blog_category');
         let res = {
             data: mapToKey(data)
         }
         return res
     },
     /**
-     * @description 文章详情
+     * @description 分类详情
      * @return Object {}
      */
     getCategoryDetailModel: async (params) => {
-    let fieldsStr = 'category_oid,name,create_time';
+    let fieldsStr = 'category_oid,name,create_time,count';
         let data = await getData('xzh_blog_category',fieldsStr,'category_oid',params.blogOID);        
         return mapToKey(data)
     },
 
     /**
-     * @description 新增文章
+     * @description 新增分类
      * @return {errCode,errMsg}
      */
     createNewCategoryModel: async (values) => {
+        console.log('createNewCategoryModel values',values);
         values.categoryOID = uuid.v1();
-        values.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
+        values.createTime = values.createTime || dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
         let sqlKeyStr = mapToSqlKey(values);
         let valueKeyStr = mapToSqlValue(values);
         let data = await createData('xzh_blog_category',sqlKeyStr,valueKeyStr);
@@ -116,7 +132,7 @@ const blogModel = {
     },
 
     /**
-     * @description 修改文章
+     * @description 修改分类
      * @return {errCode,errMsg}
      */
     updateCategoryModel: async (values) => {
@@ -128,6 +144,22 @@ const blogModel = {
         }
         else{
             return getErrorMessage('UPDATE_FAILED');
+        }
+    },
+
+    /**
+     * @description 删除分类
+     * @return {errCode,errMsg}
+     */
+    deleteCategoryModel: async (values) => {
+        let categoryOID = values.categoryOID;
+        let data = await deleteData('xzh_blog_category','category_oid',categoryOID);
+        console.log('deleteCategoryModel data',data);
+        if(data.affectedRows > 0){
+            return getErrorMessage('DELETE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('DELETE_FAILED');
         }
     },
 }

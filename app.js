@@ -23,9 +23,15 @@ let router = require('./routes/blog.js');
 
 //get和post请求参数
 app.use(async (ctx, next) => {
-  console.log('ctx request',ctx.request);
+  let params;
+  if(typeof ctx.request.body === 'string') {
+    params = JSON.parse(ctx.request.body);
+  }
+  else if(typeof typeof ctx.request.body === 'object'){
+    params = ctx.request.body;
+  }
     ctx.params = {
-      ...ctx.request.body,
+      ...params,
       ...ctx.query
     };
     await next();

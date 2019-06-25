@@ -8,6 +8,7 @@ const blogController = {
         obj.size = Number(obj.size);
         try {
             await blogModel.getBlogListModel(obj).then(result => {
+                console.log('getBlogList',result)
                 ctx.body = result;
                 next()
             })
@@ -49,12 +50,25 @@ const blogController = {
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
+    deleteBlog:async (ctx,next) => {
+        let obj = ctx.params;
+        console.log('blogController deleteBlog obj',obj);
+        try{
+            await blogModel.deleteBlogModel(obj).then(result => {
+                ctx.response.body = result;
+                next()
+            })
+        }catch{
+            return getErrorMessage('SYSTEM_ERROR')
+        }
+    },
 
     // 博客分类
     getCategoryList: async (ctx,next) => {
         let obj = ctx.params;
         try {
             await blogModel.getCategoriesModel(obj).then(result => {
+                console.log('getCategoryList',result)
                 ctx.body = result;
                 next()
             })
@@ -87,8 +101,21 @@ const blogController = {
     updateCategory:async (ctx,next) => {
         let obj = ctx.params;
         console.log('blogController updateCategory obj',obj);
+        if(obj.createTime) delete obj.createTime;
         try{
             await blogModel.updateCategoryModel(obj).then(result => {
+                ctx.response.body = result;
+                next()
+            })
+        }catch{
+            return getErrorMessage('SYSTEM_ERROR')
+        }
+    },
+    deleteCategory:async (ctx,next) => {
+        let obj = ctx.params;
+        console.log('blogController deleteCategory obj',obj);
+        try{
+            await blogModel.deleteCategoryModel(obj).then(result => {
                 ctx.response.body = result;
                 next()
             })

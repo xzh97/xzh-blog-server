@@ -14,6 +14,7 @@ const query = (sql, values) => {
             }
             else {
                 connection.query(sql, values, (err, rows) => {
+                    console.log(err,rows);
                     if (err) {
                         reject(err)
                     }
@@ -90,10 +91,22 @@ const updateData = async (table, keyValueStr, key, value) => {
     let _sql = `UPDATE ${table} SET ${keyValueStr} WHERE ${key}='${value}';`;
     return await query(_sql)
 }
+
+/**
+ * @summary 删除数据
+ * @param {string} table 表名
+ * @param {string} key 更新条件key
+ * @param {string} value 更新条件value
+ */
+const deleteData = async (table, key, value) => {
+    let _sql = `DELETE FROM ${table} WHERE ${key}='${value}';`;
+    return await query(_sql)
+}
 module.exports = {
     getDataList,
     getDataListCount,
     getData,
     createData,
     updateData,
+    deleteData
 }
