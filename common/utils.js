@@ -3,7 +3,7 @@
  * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-06-24 22:46:27
+ * Last modified  : 2019-06-27 22:18:48
  */
 
 /**
@@ -98,7 +98,7 @@ const isEmptyArray = (arr) => {
 */
 const removeTag = (str) => {
     console.log(str);
-    return str.replace((/<[^>]+>/g, "")).substr(0,100);
+    return str.replace(/<[^>]+>/g, "").substr(0,100);
 }
 module.exports = {
     dateFormat,

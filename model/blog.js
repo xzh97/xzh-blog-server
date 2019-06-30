@@ -41,6 +41,7 @@ const blogModel = {
     createNewBlogModel: async (values) => {
         values.blogOID = uuid.v1();
         values.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
+        values.category = values.category.join(',');
         values.lastUpdatedTime = values.createTime;
         values.author = 'xzh';
         values.description = removeTag(values.content);
@@ -61,6 +62,7 @@ const blogModel = {
      */
     updateBlogModel: async (values) => {
         let blogOID = values.blogOID;
+        values.category = values.category.join(',');
         values.description = removeTag(values.content);
         let updateStr = mapToKeyValue(values);
         let data = await updateData('xzh_blog',updateStr,'blog_oid',blogOID);
