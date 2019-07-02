@@ -3,7 +3,7 @@
  * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-06-27 22:18:48
+ * Last modified  : 2019-07-01 21:45:30
  */
 
 /**
@@ -18,7 +18,7 @@ const dateFormat = (date, format='yyyy-MM-dd') => {
             date = new Date(date.replace('/\-/mg','/'))
         }
         else{
-            console.log(date);
+            //console.log(date);
         }
     }
     let year,month,day,hour,minutes,seconds;
@@ -51,7 +51,7 @@ function addZero(value){
  * @return object
  */
 const pagination = (total,data,currentPage,size) => {
-    console.log('pagination params',total,data.length,currentPage,size);
+    //console.log('pagination params',total,data.length,currentPage,size);
     let hasNextPage = true,
         hasPrevPage = true,
         length = data.length,

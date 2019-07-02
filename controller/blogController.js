@@ -8,7 +8,7 @@ const blogController = {
         obj.size = Number(obj.size);
         try {
             await blogModel.getBlogListModel(obj).then(result => {
-                console.log('getBlogList',result)
+                //console.log('getBlogList',result)
                 ctx.body = result;
                 next()
             })
@@ -40,7 +40,7 @@ const blogController = {
     },
     updateBlog:async (ctx,next) => {
         let obj = ctx.params;
-        console.log('blogController updateBlog obj',obj);
+        //('blogController updateBlog obj',obj);
         try{
             await blogModel.updateBlogModel(obj).then(result => {
                 ctx.response.body = result;
@@ -68,7 +68,7 @@ const blogController = {
         let obj = ctx.params;
         try {
             await blogModel.getCategoriesModel(obj).then(result => {
-                console.log('getCategoryList',result)
+                //console.log('getCategoryList',result)
                 ctx.body = result;
                 next()
             })
@@ -100,7 +100,7 @@ const blogController = {
     },
     updateCategory:async (ctx,next) => {
         let obj = ctx.params;
-        console.log('blogController updateCategory obj',obj);
+        //('blogController updateCategory obj',obj);
         if(obj.createTime) delete obj.createTime;
         try{
             await blogModel.updateCategoryModel(obj).then(result => {
@@ -113,7 +113,7 @@ const blogController = {
     },
     deleteCategory:async (ctx,next) => {
         let obj = ctx.params;
-        console.log('blogController deleteCategory obj',obj);
+       // console.log('blogController deleteCategory obj',obj);
         try{
             await blogModel.deleteCategoryModel(obj).then(result => {
                 ctx.response.body = result;
