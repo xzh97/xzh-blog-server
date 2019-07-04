@@ -1,5 +1,4 @@
 const router = require('koa-router')();
-const koaBody = require('koa-body');
 const blogController = require('../controller/blogController.js');
 
 /**

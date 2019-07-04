@@ -6,9 +6,10 @@ const config = require('./config/index');
 
 // 创建一个Koa对象表示web app本身:
 const app = new Koa();
-app.use(koaBody());
+app.use(koaBody({multipart: true,}));
 
-let router = require('./routes/blog.js');
+const blogRouter = require('./routes/blog.js');
+const commonRouter = require('./routes/index.js');
 
 
 // 配置跨域
@@ -27,7 +28,7 @@ app.use(async (ctx, next) => {
   if(typeof ctx.request.body === 'string') {
     params = JSON.parse(ctx.request.body);
   }
-  else if(typeof typeof ctx.request.body === 'object'){
+  else if(typeof ctx.request.body === 'object'){
     params = ctx.request.body;
   }
     ctx.params = {
@@ -40,7 +41,8 @@ app.use(async (ctx, next) => {
 // 配置静态资源加载中间件
 app.use(koaStatic(path.join(__dirname , './public')))
 
-app.use(router.routes());
+app.use(blogRouter.routes());
+app.use(commonRouter.routes());
 
 // 在端口3000监听:
 app.listen(config.port);
