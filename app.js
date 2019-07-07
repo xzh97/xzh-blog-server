@@ -6,7 +6,15 @@ const config = require('./config/index');
 
 // 创建一个Koa对象表示web app本身:
 const app = new Koa();
-app.use(koaBody({multipart: true,}));
+app.use(koaBody(
+  {
+    multipart: true,
+    formidable:{
+      //uploadDir:path.join(__dirname , './upload'), 可以直接把文件存到某文件夹下， 不过这里想自己处理试试
+      //keepExtensions:true,
+    }
+  }
+));
 
 const blogRouter = require('./routes/blog.js');
 const commonRouter = require('./routes/index.js');
@@ -39,7 +47,7 @@ app.use(async (ctx, next) => {
   });
 
 // 配置静态资源加载中间件
-app.use(koaStatic(path.join(__dirname , './public')))
+app.use(koaStatic(path.join(__dirname , './static')))
 
 app.use(blogRouter.routes());
 app.use(commonRouter.routes());

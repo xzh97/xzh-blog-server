@@ -1,7 +1,7 @@
 const {getDataListCount, getDataList, getData, createData, updateData, deleteData} = require('../sql/index');
 const getErrorMessage = require('../common/message');
 const {mapToKey, mapToSqlKey, mapToSqlValue, mapToKeyValue} = require('../common/map');
-const {dateFormat, pagination, checkHtmlContent, removeTag} = require('../common/utils');
+const {dateFormat, pagination, removeTag} = require('../common/utils');
 const uuid = require('uuid');
 
     /*                              博客分类                               */
