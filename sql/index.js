@@ -107,5 +107,6 @@ module.exports = {
     getData,
     createData,
     updateData,
-    deleteData
+    deleteData,
+    query,
 }

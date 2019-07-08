@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 let parentPath = path.resolve(__dirname, '..');
-console.log(parentPath)
 const {dateFormat} = require('../common/utils');
 const upload = file => {
     if(file){
+        console.log(file);
         let extensionArr = file.name.split('.');
         let extension = '.' + extensionArr[extensionArr.length -1]; //获取后缀名
         let fileName = dateFormat(new Date(),'yyyyMMdd') + parseInt(Math.random()*10000) + extension;//新的文件名
