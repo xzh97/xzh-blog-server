@@ -3,6 +3,7 @@ const koaBody = require('koa-body');
 const koaStatic = require('koa-static');
 const path = require('path');
 const config = require('./config/index');
+const {init} = require('./sql/db');
 
 // 创建一个Koa对象表示web app本身:
 const app = new Koa();
@@ -19,6 +20,8 @@ app.use(koaBody(
 const blogRouter = require('./routes/blog.js');
 const commonRouter = require('./routes/index.js');
 
+//初始化sql表
+init();
 
 // 配置跨域
 /*app.use(async (ctx, next) => {

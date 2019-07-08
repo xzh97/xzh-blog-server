@@ -20,6 +20,7 @@ const upload = file => {
 //判断filepath是否存在，不存在就创建一个
 const UploadPath = (fileUrl,fileName) => {
     let dirPath = parentPath + fileUrl;
+    console.log('UploadPath dirPath',dirPath);
     if(!fs.existsSync(dirPath)){
         fs.mkdir(dirPath, err => {
             if(err) {
