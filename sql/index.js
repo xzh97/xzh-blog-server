@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const { isEmptyObj } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
+const {mapToKeyValue} = require('../common/map');
 
 const query = (sql, values) => {
     console.log(sql);
@@ -35,13 +36,13 @@ const query = (sql, values) => {
  */
 const getDataList = async (table, selectStr = '*', limit = {}) => {
     let _sql = '';
+    let condition = mapToKeyValue(limit).length ? ` WHERE ${mapToKeyValue(limit)} ` : ``;
     if (isEmptyObj(limit)) {
-        _sql = `SELECT ${selectStr} FROM ${table}`;
+        _sql = `SELECT ${selectStr} FROM ${table}${condition}`;
     }
     else {
-        _sql = `SELECT ${selectStr} FROM ${table} LIMIT ${(limit.page - 1) * limit.size},${limit.size}`;
+    _sql = `SELECT ${selectStr} FROM ${table}${condition} LIMIT ${(limit.page - 1) * limit.size},${limit.size}`;
     }
-
     return await query(_sql);
 }
 

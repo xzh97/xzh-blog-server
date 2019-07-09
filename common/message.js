@@ -4,7 +4,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-06 23:19:46 
- * Last modified  : 2019-07-04 22:47:46
+ * Last modified  : 2019-07-09 20:54:46
  */
 const errorMessageMap = {
     'CREATE_SUCCESS': '创建成功',
@@ -16,6 +16,7 @@ const errorMessageMap = {
     'SYSTEM_ERROR':'系统错误',
     'UPLOAD_SUCCESS':'上传成功',
     'UPLOAD_ERROR':'上传失败',
+    'SQL_ERROR':'sql错误'
 }
 const errorCodeMap = {
     'CREATE_SUCCESS': '10001',
@@ -27,6 +28,7 @@ const errorCodeMap = {
     'SYSTEM_ERROR': '10007',
     'UPLOAD_SUCCESS':'10008',
     'UPLOAD_ERROR':'10009',
+    'SQL_ERROR':'10010'
 }
 
 const getErrorMessage = (key)=>{

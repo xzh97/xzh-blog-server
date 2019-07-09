@@ -84,18 +84,40 @@ const uuid = require('uuid');
      * @return {hasNextPage:boolean:array:boolean，data:array}
      */
     const getBlogListModel = async (limit) => {
-        let keys = 'type,blog_oid,description,read_number,comment_count,title,create_time';
-        let data = await getDataList('xzh_blog',keys,limit);
-        let total = await getDataListCount('xzh_blog');
-        //无下一页
-        let paginationObj = pagination(total[0]['count(*)'],data,limit.page,limit.size);
-        let res = {
-                hasNextPage: paginationObj.hasNextPage,
-                hasPrevPage: paginationObj.hasPrevPage,
-                totalPage:paginationObj.totalPage,
-                data: mapToKey(data)
+        try {
+            let keys = 'type,blog_oid,description,read_number,comment_count,title,create_time';
+            if(limit && limit.originalOnly){
+                limit.type = 1;
+                delete limit.originalOnly;
             }
-        return res
+            let data = await getDataList('xzh_blog',keys,limit);
+                data = mapToKey(data).reverse();
+            let total = await getDataListCount('xzh_blog');
+            //无下一页
+            let paginationObj = pagination(total[0]['count(*)'],data,limit.page,limit.size);
+
+            const sortBlogList = (data,sortBy = 'default') => { //default 更新时间降序， ascending 更新时间升序 时间越早越前排, pageviews 浏览量
+                if(sortBy === 'ascending'){
+                    return data.reverse();
+                }else if(sortBy === 'pageviews'){
+                    return data.sort(function(a,b){
+                        return a.readNumber >　b.readNumber ? 1 : -1
+                    })
+                }
+                console.log('sortBlogList data',data);
+                return data
+            }
+            let res = {
+                    hasNextPage: paginationObj.hasNextPage,
+                    hasPrevPage: paginationObj.hasPrevPage,
+                    totalPage:paginationObj.totalPage,
+                    data: sortBlogList(data,limit.sortBy)
+                }
+            return res
+        } catch (error) {
+            return error
+        }
+        
     }
     /**
      * @description 文章详情

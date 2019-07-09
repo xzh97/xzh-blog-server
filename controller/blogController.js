@@ -6,9 +6,10 @@ const blogController = {
         let obj = ctx.params;
         obj.page = Number(obj.page);
         obj.size = Number(obj.size);
+        //console.log('getBlogList params',obj);
         try {
             await blogModel.getBlogListModel(obj).then(result => {
-                //console.log('getBlogList',result)
+                console.log('getBlogList',result)
                 ctx.body = result;
                 next()
             })

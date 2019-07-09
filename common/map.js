@@ -4,7 +4,7 @@
  * @author xzh xzh19971005@163.com
  *
  * Created at     : 2019-06-12 21:36:13 
- * Last modified  : 2019-06-22 00:14:31
+ * Last modified  : 2019-07-09 22:34:22
  */
 
 /**
@@ -105,7 +105,12 @@ toSqlValue = (value) => {
 const mapToKeyValue = (obj) => {
     let str = '';
     for(let key in obj){
-        str += `${toSqlMap[key] || key}='${toSqlValue(obj[key])}',`
+        if(key === 'page' || key === 'size' || key === 'sortBy'){
+            str+=''
+        }
+        else{
+            str += `${toSqlMap[key] || key}='${toSqlValue(obj[key])}',`
+        }
     }
     
     return str.substr(0,str.length-1);

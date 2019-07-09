@@ -3,7 +3,7 @@
  * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-07-01 21:45:30
+ * Last modified  : 2019-07-09 20:56:04
  */
 
 /**
@@ -100,10 +100,18 @@ const removeTag = (str) => {
     console.log(str);
     return str.replace(/<[^>]+>/g, "").substr(0,100);
 }
+const handleError = (fn = () => {}) =>{
+    try {
+        fn && fn()
+    } catch (error) {
+        return error
+    }
+}
 module.exports = {
     dateFormat,
     pagination,
     isEmptyObj,
     removeTag,
-    isEmptyArray
+    isEmptyArray,
+    handleError,
 }
