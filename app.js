@@ -3,7 +3,7 @@ const koaBody = require('koa-body');
 const koaStatic = require('koa-static');
 const path = require('path');
 const config = require('./config/index');
-const {init} = require('./sql/db');
+const init = require('./sql/db');
 
 // 创建一个Koa对象表示web app本身:
 const app = new Koa();
