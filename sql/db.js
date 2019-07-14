@@ -30,9 +30,20 @@ const sqlMap = {
     create_time datetime NOT NULL COMMENT '个人分类创建时间',
     count int(11) NOT NULL DEFAULT '0' COMMENT '分类下的文章数',
     PRIMARY KEY (id)
-  ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客个人分类'`
+  ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客个人分类'`,
+  'xzh_blog_comments':`CREATE TABLE xzh_blog_comments (
+    id int(11) NOT NULL AUTO_INCREMENT COMMENT '博客分类id',
+    comment_oid varchar(50) NOT NULL COMMENT '评论oid',
+    blog_oid varchar(50) NOT NULL COMMENT '评论所在博客oid',
+    parent_oid varchar(50) NOT NULL COMMENT '评论所在父级评论oid',
+    content longtext COMMENT '评论具体内容',
+    author varchar(50) NOT NULL COMMENT '评论者',
+    email varchar(50) NOT NULL COMMENT '评论者邮箱',
+    create_time datetime NOT NULL COMMENT '评论创建时间',
+    PRIMARY KEY (id)
+  ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客评论'`,
 };
-const tableArr = ['xzh_blog','xzh_blog_category'];
+const tableArr = ['xzh_blog','xzh_blog_category','xzh_blog_comments'];
 
 const createTable = async sql => {
     return await query(sql)
