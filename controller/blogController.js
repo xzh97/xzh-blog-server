@@ -124,5 +124,17 @@ const blogController = {
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
+
+    addNewComment:async (ctx,next) => {
+        let obj = ctx.params;
+        try{
+            await blogModel.addNewCommentModel(obj).then(result => {
+                ctx.response.body = result;
+                next()
+            })
+        }catch{
+            return getErrorMessage('SYSTEM_ERROR')
+        }
+    },
 }
 module.exports = blogController;

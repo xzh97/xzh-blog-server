@@ -11,12 +11,14 @@
  * @description map
  */
 const toSqlMap = {
-    createTime:'create_time',
-    blogOID:'blog_oid',
-    lastUpdatedTime:'last_updated_time',
-    readNumber:'read_number',
-    commentCount:'comment_count',
-    categoryOID:'category_oid'
+    'createTime':'create_time',
+    'blogOID':'blog_oid',
+    'lastUpdatedTime':'last_updated_time',
+    'readNumber':'read_number',
+    'commentCount':'comment_count',
+    'categoryOID':'category_oid',
+    'commentOID':'comment_oid',
+    'parentOID':'parent_oid',
 }
 
 const toKeyMap = {
@@ -26,6 +28,8 @@ const toKeyMap = {
     'read_number':'readNumber',
     'comment_count':'commentCount',
     'category_oid':'categoryOID',
+    'comment_oid':'commentOID',
+    'parent_oid':'parentOID',
 }
 
 /**

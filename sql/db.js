@@ -35,7 +35,7 @@ const sqlMap = {
     id int(11) NOT NULL AUTO_INCREMENT COMMENT '博客分类id',
     comment_oid varchar(50) NOT NULL COMMENT '评论oid',
     blog_oid varchar(50) NOT NULL COMMENT '评论所在博客oid',
-    parent_oid varchar(50) NOT NULL COMMENT '评论所在父级评论oid',
+    parent_oid varchar(50) DEFAULT NULL COMMENT '评论所在父级评论oid',
     content longtext COMMENT '评论具体内容',
     author varchar(50) NOT NULL COMMENT '评论者',
     email varchar(50) NOT NULL COMMENT '评论者邮箱',
@@ -52,7 +52,7 @@ const createTable = async sql => {
 const checkTableIsExist = async table => {
     let _sql = `show tables like '${table}'`
     let result = await query(_sql);
-    //console.log('checkTableIsExist',table,result.length);
+    //console.log('checkTableIsExist',table,result);
     return result.length;
 }
 

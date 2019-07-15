@@ -56,4 +56,9 @@ router.put('/api/blog/category/update',blogController.updateCategory);
  */
 router.delete('/api/blog/category/delete/:categoryOID',blogController.deleteCategory);
 
+/**
+ * @description 添加文章评论
+ */
+router.post('/api/blog/comment/add',blogController.addNewComment);
+
 module.exports = router;
