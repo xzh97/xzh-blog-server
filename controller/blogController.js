@@ -13,7 +13,7 @@ const blogController = {
                 ctx.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
@@ -24,7 +24,7 @@ const blogController = {
                 ctx.response.body = result[0];
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }  
     },
@@ -35,7 +35,7 @@ const blogController = {
                 ctx.response.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         } 
     },
@@ -47,7 +47,7 @@ const blogController = {
                 ctx.response.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
@@ -59,7 +59,7 @@ const blogController = {
                 ctx.response.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
@@ -73,7 +73,7 @@ const blogController = {
                 ctx.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
@@ -84,7 +84,7 @@ const blogController = {
                 ctx.response.body = result[0];
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }  
     },
@@ -95,7 +95,7 @@ const blogController = {
                 ctx.response.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         } 
     },
@@ -108,7 +108,7 @@ const blogController = {
                 ctx.response.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
@@ -120,7 +120,7 @@ const blogController = {
                 ctx.response.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
@@ -132,7 +132,7 @@ const blogController = {
                 ctx.response.body = result;
                 next()
             })
-        }catch{
+        }catch(err){
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
