@@ -1,6 +1,5 @@
 const blogModel = require('../model/blog.js');
 const getErrorMessage = require('../common/message');
-const {mapToKey, mapToSqlKey, mapToSqlValue, mapToKeyValue} = require('../common/map');
 const {dateFormat, pagination, removeTag, replaceUnderlineOrCamel, transform2Where} = require('../common/utils');
 const uuid = require('uuid');
 

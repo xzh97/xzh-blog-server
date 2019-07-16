@@ -3,7 +3,6 @@ const mysql = require('mysql');
 const { isEmptyObj, transform2KeyValue } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
-const {mapToKeyValue} = require('../common/map');
 
 const query = (sql, values) => {
     console.log(sql);

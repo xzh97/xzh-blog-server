@@ -1,7 +1,6 @@
 const {getDataListCount, getDataList, getData, insertData, updateData, deleteData} = require('../sql/index');
 const getErrorMessage = require('../common/message');
 const {filterCamel} = require('../common/utils');
-const {mapToKey, mapToSqlKey, mapToSqlValue, mapToKeyValue} = require('../common/map');
 const {dateFormat, pagination, transform2KeyValue} = require('../common/utils');
 const uuid = require('uuid');
 
