@@ -4,7 +4,7 @@ const {dateFormat, pagination, removeTag, replaceUnderlineOrCamel, transform2Whe
 const uuid = require('uuid');
 
 const blogController = {
-     getBlogList: async (ctx,next) => {
+    getBlogList: async (ctx,next) => {
          let obj = ctx.params;
          console.log(obj);
 
@@ -76,6 +76,7 @@ const blogController = {
                 });
                 data[0].category = totalCategories.filter(item => { return item.categoryOid === data[0].category});
                 data[0].comments = commentsList;
+                console.log(data);
                 ctx.response.body = data[0];
                 next()
             })
@@ -133,8 +134,14 @@ const blogController = {
     // 博客分类
     getCategoryList: async (ctx,next) => {
         let obj = ctx.params;
+        console.log(obj);
+        const limit = obj.page || obj.size ? {
+            page: Number(obj.page) || 1,
+            size: Number(obj.size) || 10
+        } : null;
+        const whereArr = transform2Where(obj);
         try {
-            await blogModel.getCategoriesModel(obj).then(result => {
+            await blogModel.getCategoriesModel(whereArr,limit).then(result => {
                 result.map(item => {
                     return replaceUnderlineOrCamel(item,false)
                 })
@@ -205,6 +212,8 @@ const blogController = {
 
     addNewComment:async (ctx,next) => {
         let obj = ctx.params;
+        obj.commentOid = uuid.v1();
+        obj.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
         try{
             await blogModel.addNewCommentModel(obj).then(result => {
                 ctx.response.body = result;

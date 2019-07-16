@@ -1,18 +1,20 @@
 const {getDataListCount, getDataList, getData, insertData, updateData, deleteData} = require('../sql/index');
 const getErrorMessage = require('../common/message');
-const {filterCamel} = require('../common/utils');
-const {dateFormat, pagination, transform2KeyValue} = require('../common/utils');
+const {dateFormat, filterCamel, transform2KeyValue} = require('../common/utils');
 const uuid = require('uuid');
 
 
 /*                              博客分类                               */
 /**
+ * @param {Array} params
+ * @param {Object} limit {page:number,size:number} or null
  * @description 文章分类列表查询
  * @return {Array}
  */
-const getCategoriesModel = async (limit) => {
+const getCategoriesModel = async (params,limit) => {
     let keys = 'category_oid,name,create_time,count';
-    return await getDataList('xzh_blog_category',keys,limit);
+    let whereStr = transform2KeyValue(params);
+    return await getDataList('xzh_blog_category',keys,whereStr,limit);
 }
 /**
  * @param {Array} params
@@ -100,18 +102,9 @@ const getBlogListModel = async (params,limit) => {
 const getBlogDetailModel = async (params) => {
     let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time';
     return Promise.all([await getData('xzh_blog', fieldsStr, params),await getCategoriesModel(),await getBlogComments(params)]).then(response => {
-        //console.log(response);
+        console.log(response);
         return response;
     })
-    /*let data = await getData('xzh_blog', fieldsStr, params);
-    let totalCategories = await getCategoriesModel();
-    let commentsList = await getBlogComments(params);
-    console.log(data);
-    console.log(totalCategories);
-    console.log(commentsList);
-    data[0].category = totalCategories.data.filter(item => { return item.categoryOid === data[0].category}) || [];
-    data[0].comments = commentsList;
-    return mapToKey(data)*/
 }
 
 /**
@@ -166,17 +159,14 @@ const deleteBlogModel = async (params) => {
 }
 
 /**
+ * @param {Object} params
  * @description 添加博客评论
  * @return data
  */
 const addNewCommentModel = async (params) => {
     console.log('addNewCommentModel params',params);
-    params.commentOid = uuid.v1();
-    params.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
-    let sqlKeyStr = mapToSqlKey(params);
-    let valueKeyStr = mapToSqlValue(params);
-    let data = await insertData('xzh_blog_comments',sqlKeyStr,valueKeyStr);
-    console.log(data);
+    const {keys, vals} = filterCamel(params);
+    let data = await insertData('xzh_blog_comments',keys,vals);
 
     if(data.affectedRows > 0){
         return getErrorMessage('CREATE_SUCCESS');
