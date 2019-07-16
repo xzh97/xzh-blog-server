@@ -44,8 +44,8 @@ function addZero(value){
 }
 /**
  * @description 分页工具
- * @param {array} total 数据总量
- * @param {array} data 查询到的本页数据
+ * @param {Array} total 数据总量
+ * @param {Array} data 查询到的本页数据
  * @param {number} currentPage 当前页码
  * @param {number} size 每一页最大数据量
  * @return object
@@ -97,7 +97,7 @@ const isEmptyArray = (arr) => {
  * @return {string}
 */
 const removeTag = (str) => {
-    console.log(str);
+    //console.log(str);
     return str.replace(/<[^>]+>/g, "").substr(0,100);
 }
 
@@ -124,18 +124,18 @@ const underline2Str = (val) => {
 
 /**
  * @param {String} obj 要处理的对象
- * @param {String} char 要替换的字符
  * @param {Boolean} toUnderLine 要替换的字符
+ * @param {String} char 要替换的字符
  * @description 原对象 下划线转驼峰或者驼峰转下划线  默认驼峰转下划线
  * @return 处理过的key
  */
-const replaceUnderlineOrCamel = (obj = {}, char='_', toUnderLine = true) => {
+const replaceUnderlineOrCamel = (obj = {}, toUnderLine = true, char='_') => {
     let arr = Object.keys(obj).filter(item => ~item.indexOf(char));
-    let methodMap = {
+    const methodMap = {
         toUnderline:str2Underline,
         toStr:underline2Str
     }
-    let method = methodMap[toUnderLine ? 'toUnderline' : 'toStr']
+    const method = methodMap[toUnderLine ? 'toUnderline' : 'toStr']
     arr.map(item => {
         const val = obj[item];
         const key = method(item);
@@ -144,6 +144,66 @@ const replaceUnderlineOrCamel = (obj = {}, char='_', toUnderLine = true) => {
     })
     return obj;
 }
+
+/**
+ * @param {String} obj 要处理的对象
+ * @param {String} char 要替换的字符
+ * @description 对象驼峰转下划线 obj:{a:1,b:2},['a,b'],[1,2]
+ * @return 返回处理后的keys和对应的vals
+ * @return {Array} keys
+ * @return {Array} vals
+ */
+const filterCamel = (obj = {},char = '_') => {
+    let arr = Object.keys(obj),keys = [], vals = [];
+    arr.forEach(item => {
+        keys.push(str2Underline(item))
+        vals.push(obj[item]);
+    });
+
+    return {
+        keys,
+        vals
+    };
+};
+
+/**
+ * @param {String} obj 要处理的对象
+ * @param {Boolean} flag 确定where条件 （or，and，） 默认 and todo 暂时先不写这个 看下先
+ * @description 转换成where子句的keyValue数组
+ * @return 返回处理后的数组 ex:'{a:1,b:2} --> [{key:'a',value:'1'},{key:'b',value:'2'}]'
+ * @return {Array} result
+ */
+const transform2Where = (obj = {}, flag = true) => {
+        let arr = Object.keys(obj),result = [];
+        arr.forEach(key => {
+            let item = {
+                key: str2Underline(key),
+                value: obj[key]
+            }
+            result.push(item)
+        });
+
+        return result;
+    };
+
+/**
+ * @param {Array} arr 要处理的数组
+ * @param char 连接符号
+ * @description 转换成key=value的形式
+ * @return 返回处理后的数组 ex:'[{key:'a',value:'1'} --> a=1'
+ * @return {String}
+ */
+const transform2KeyValue = (arr = [], char = ',') => {
+    let result = [];
+    arr.forEach(item => {
+        let valueStr = typeof item.value === 'number' ? item.value : `'${item.value}'`
+        let str = `${item.key}=${valueStr}`;
+        result.push(str)
+    });
+
+    return result.join(char);
+};
+
 
 
 module.exports = {
@@ -155,4 +215,7 @@ module.exports = {
     str2Underline,
     underline2Str,
     replaceUnderlineOrCamel,
+    filterCamel,
+    transform2Where,
+    transform2KeyValue,
 }

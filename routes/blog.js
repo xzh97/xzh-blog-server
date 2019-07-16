@@ -10,7 +10,7 @@ router.get('/api/blog/list', blogController.getBlogList);
  * @description 文章详情
  * @param id blogID
  */
-router.get('/api/blog/detail/:blogOID',blogController.getBlogDetail);
+router.get('/api/blog/detail/:blogOid',blogController.getBlogDetail);
 
 /**
  * @description 创建文章 
@@ -25,7 +25,7 @@ router.put('/api/blog/update',blogController.updateBlog);
 /**
  * @description  删除文章 
  */
-router.delete('/api/blog/delete/:blogOID',blogController.deleteBlog);
+router.delete('/api/blog/delete/:blogOid',blogController.deleteBlog);
 
 
 
@@ -39,7 +39,7 @@ router.get('/api/blog/category/list', blogController.getCategoryList);
  * @description 文章分类详情
  * @param id blogID
  */
-router.get('/api/blog/category/detail/:categoryOID',blogController.getCategoryDetail);
+router.get('/api/blog/category/detail/:categoryOid',blogController.getCategoryDetail);
 
 /**
  * @description 创建文章分类 
@@ -54,7 +54,7 @@ router.put('/api/blog/category/update',blogController.updateCategory);
 /**
  * @description 删除文章分类 
  */
-router.delete('/api/blog/category/delete/:categoryOID',blogController.deleteCategory);
+router.delete('/api/blog/category/delete/:categoryOid',blogController.deleteCategory);
 
 /**
  * @description 添加文章评论

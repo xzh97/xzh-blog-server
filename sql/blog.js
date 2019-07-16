@@ -27,9 +27,9 @@ const getBlogListCount = async (table) => {
     return await query(sql)
 }
 
-const getBlogDetail = async (table,blogOID) => {
+const getBlogDetail = async (table,blogOid) => {
     let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time';
-    let sql = `SELECT ${fieldsStr} FROM ${table} WHERE blog_oid='${blogOID}'`;
+    let sql = `SELECT ${fieldsStr} FROM ${table} WHERE blog_oid='${blogOid}'`;
     return await query(sql)
 }
 const createNewBlog = async (table,values) => {

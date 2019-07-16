@@ -12,24 +12,24 @@
  */
 const toSqlMap = {
     'createTime':'create_time',
-    'blogOID':'blog_oid',
+    'blogOid':'blog_oid',
     'lastUpdatedTime':'last_updated_time',
     'readNumber':'read_number',
     'commentCount':'comment_count',
-    'categoryOID':'category_oid',
-    'commentOID':'comment_oid',
-    'parentOID':'parent_oid',
+    'categoryOid':'category_oid',
+    'commentOid':'comment_oid',
+    'parentOid':'parent_oid',
 }
 
 const toKeyMap = {
     'create_time':'createTime',
-    'blog_oid':'blogOID',
+    'blog_oid':'blogOid',
     'last_updated_time':'lastUpdatedTime',
     'read_number':'readNumber',
     'comment_count':'commentCount',
-    'category_oid':'categoryOID',
-    'comment_oid':'commentOID',
-    'parent_oid':'parentOID',
+    'category_oid':'categoryOid',
+    'comment_oid':'commentOid',
+    'parent_oid':'parentOid',
 }
 
 /**
@@ -61,7 +61,7 @@ const mapToSqlValue = (values) => {
 
 /**
  * @summary 映射函数 把查到的数据库数据中，带有 '_'的 都改为 大写字母
- * @description  'blog_oid' -----> 'blogOID'
+ * @description  'blog_oid' -----> 'blogOid'
  * @param data array
  * @return array
  */

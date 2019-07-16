@@ -1,6 +1,6 @@
 const config = require('../config/index');
 const mysql = require('mysql');
-const { isEmptyObj } = require('../common/utils');
+const { isEmptyObj, transform2KeyValue } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
 const {mapToKeyValue} = require('../common/map');
@@ -30,18 +30,18 @@ const query = (sql, values) => {
 
 /**
  * @summary 查询数据(可分页)
- * @param {string} table 表名
- * @param {string} selectStr 表数据列
- * @param {object} limit 是否分页
+ * @param {String} table 表名
+ * @param {String} selectStr 表数据列
+ * @param {String} whereStr where子句
+ * @param {object} limit 分页 {page:number,size:number} or null
  */
-const getDataList = async (table, selectStr = '*', limit = {}) => {
-    let _sql = '';
-    let condition = mapToKeyValue(limit).length ? ` WHERE ${mapToKeyValue(limit)} ` : ``;
-    if (isEmptyObj(limit)) {
-        _sql = `SELECT ${selectStr} FROM ${table}${condition}`;
+const getDataList = async (table, selectStr, whereStr, limit) => {
+    let _sql = `SELECT ${selectStr} FROM ${table} `;
+    if(whereStr.length){
+        _sql += `${whereStr} `
     }
-    else {
-    _sql = `SELECT ${selectStr} FROM ${table}${condition} LIMIT ${(limit.page - 1) * limit.size},${limit.size}`;
+    if (limit) {
+        _sql += `LIMIT ${(limit.page - 1) * limit.size},${limit.size}`;
     }
     return await query(_sql);
 }
@@ -57,56 +57,56 @@ const getDataListCount = async (table) => {
 }
 
 /**
- * @summary 查询某条数据
+ * @summary 查询一条数据
  * @param {string} table 表名
  * @param {string} selectStr 表数据列
- * @param {string} key 查询条件key名
- * @param {string} value 查询条件value值
+ * @param {Array} params 查询条件key名
  */
-const getData = async (table, selectStr = '*', key, value) => {
-    let _sql = `SELECT ${selectStr} FROM ${table} WHERE ${key}='${value}'`;
+const getData = async (table, selectStr = '*', params) => {
+    let where = transform2KeyValue(params);
+    let _sql = `SELECT ${selectStr} FROM ${table} WHERE ${where}`;
 
     return await query(_sql);
 }
 
 /**
- * @summary 新建数据
+ * @summary 插入一条数据
  * @param {string} table 表名
- * @param {string} keyStr 列名
- * @param {string} valueStr 列对应的数据
+ * @param {Array} keys 列名
+ * @param {Array} vals 列对应的数据
  */
-const createData = async (table, keyStr, valueStr) => {
+const insertData = async (table, keys, vals) => {
+    const keyStr = keys.join(',');
+    const valueStr = keys.map(item => '?').join(',');
     let _sql = `INSERT INTO ${table} (${keyStr}) VALUE (${valueStr});`;
-    return await query(_sql)
+    return await query(_sql,[...vals])
 }
 
 /**
- * @summary 更新数据
+ * @summary 更新某条数据
  * @param {string} table 表名
  * @param {string} keyValueStr 需要更新的数据 key=value,
- * @param {string} key 更新条件key
- * @param {string} value 更新条件value
+ * @param {string} whereStr where子句条件
  */
-const updateData = async (table, keyValueStr, key, value) => {
-    let _sql = `UPDATE ${table} SET ${keyValueStr} WHERE ${key}='${value}';`;
+const updateData = async (table, keyValueStr, whereStr) => {
+    let _sql = `UPDATE ${table} SET ${keyValueStr} WHERE ${whereStr};`;
     return await query(_sql)
 }
 
 /**
- * @summary 删除数据
+ * @summary 删除数据（逻辑删除）
  * @param {string} table 表名
- * @param {string} key 更新条件key
- * @param {string} value 更新条件value
+ * @param {string} whereStr where子句条件
  */
-const deleteData = async (table, key, value) => {
-    let _sql = `DELETE FROM ${table} WHERE ${key}='${value}';`;
+const deleteData = async (table, whereStr) => {
+    let _sql = `DELETE FROM ${table} WHERE ${whereStr};`;
     return await query(_sql)
 }
 module.exports = {
     getDataList,
     getDataListCount,
     getData,
-    createData,
+    insertData,
     updateData,
     deleteData,
     query,

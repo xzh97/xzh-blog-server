@@ -1,16 +1,59 @@
 const blogModel = require('../model/blog.js');
 const getErrorMessage = require('../common/message');
+const {mapToKey, mapToSqlKey, mapToSqlValue, mapToKeyValue} = require('../common/map');
+const {dateFormat, pagination, removeTag, replaceUnderlineOrCamel, transform2Where} = require('../common/utils');
+const uuid = require('uuid');
 
 const blogController = {
      getBlogList: async (ctx,next) => {
-        let obj = ctx.params;
-        obj.page = Number(obj.page);
-        obj.size = Number(obj.size);
-        //console.log('getBlogList params',obj);
+         let obj = ctx.params;
+         console.log(obj);
+
+         const limit = obj.page || obj.size ? {
+            page: Number(obj.page) || 1,
+            size: Number(obj.size) || 10
+         } : null;
+         const sortByVal = obj.sortBy;
+         const arr = ['page','size','sortBy'];
+         //不作为where子句的条件，没有这个列
+         Object.keys(obj).forEach(item => {
+             if(arr.includes(item)){
+                 delete obj[item];
+             }
+         })
+
+        const whereArr = transform2Where(obj);
         try {
-            await blogModel.getBlogListModel(obj).then(result => {
-                console.log('getBlogList',result)
-                ctx.body = result;
+            await blogModel.getBlogListModel(whereArr,limit).then(result => {
+                let data = result[0].map(item => {
+                    return replaceUnderlineOrCamel(item,false)
+                }).reverse();
+                const total = result[1];
+
+                data = sortBlogList(data,sortByVal);
+
+                //无下一页
+                let {hasNextPage, hasPrevPage, totalPage } = pagination(total[0]['count(*)'],data,limit.page,limit.size);
+
+                function sortBlogList (data,sortBy = 'default') { //default 更新时间降序， ascending 更新时间升序 时间越早越前排, pageviews 浏览量
+                    console.log(data,sortBy);
+                    if(sortBy === 'ascending'){
+                        data = data.reverse();
+                    }else if(sortBy === 'pageviews'){
+                        data = data.sort(function(a,b){
+                            return a.readNumber <　b.readNumber ? 1 : -1
+                        })
+                    }
+                    console.log(data);
+                    return data
+                }
+
+                ctx.body = {
+                    hasNextPage,
+                    hasPrevPage,
+                    totalPage,
+                    data
+                };
                 next()
             })
         }catch(err){
@@ -19,9 +62,22 @@ const blogController = {
     },
     getBlogDetail: async (ctx,next) => {
         let obj = ctx.params;
+        let whereArr = transform2Where(obj)
         try{
-            await blogModel.getBlogDetailModel(obj).then(result => {
-                ctx.response.body = result[0];
+            await blogModel.getBlogDetailModel(whereArr).then(result => {
+                //console.log(result);
+                let data = result[0].map(item => {
+                    return replaceUnderlineOrCamel(item,false);
+                });
+                let totalCategories = result[1].map(item => {
+                    return replaceUnderlineOrCamel(item,false);
+                });
+                let commentsList = result[2].map(item => {
+                    return replaceUnderlineOrCamel(item,false);
+                });
+                data[0].category = totalCategories.filter(item => { return item.categoryOid === data[0].category});
+                data[0].comments = commentsList;
+                ctx.response.body = data[0];
                 next()
             })
         }catch(err){
@@ -29,9 +85,13 @@ const blogController = {
         }  
     },
     createNewBlog:async (ctx,next) => {
-        let obj = ctx.params;
+        let values = ctx.params;
+        values.blogOid = uuid.v1();
+        values.createTime = values.lastUpdatedTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
+        values.author = 'xzh';
+        values.description = removeTag(values.content);
         try{
-            await blogModel.createNewBlogModel(obj).then(result => {
+            await blogModel.createNewBlogModel(values).then(result => {
                 ctx.response.body = result;
                 next()
             })
@@ -41,9 +101,15 @@ const blogController = {
     },
     updateBlog:async (ctx,next) => {
         let obj = ctx.params;
-        //('blogController updateBlog obj',obj);
+            obj.description = removeTag(obj.content);
+            console.log(obj);
+        let whereObj = {
+            blogOid: obj.blogOid
+        }
+        let whereArr = transform2Where(whereObj);
+        let updateArr = transform2Where(obj);
         try{
-            await blogModel.updateBlogModel(obj).then(result => {
+            await blogModel.updateBlogModel(updateArr,whereArr).then(result => {
                 ctx.response.body = result;
                 next()
             })
@@ -53,9 +119,10 @@ const blogController = {
     },
     deleteBlog:async (ctx,next) => {
         let obj = ctx.params;
+        let whereArr = transform2Where(obj);
         console.log('blogController deleteBlog obj',obj);
         try{
-            await blogModel.deleteBlogModel(obj).then(result => {
+            await blogModel.deleteBlogModel(whereArr).then(result => {
                 ctx.response.body = result;
                 next()
             })
@@ -69,7 +136,9 @@ const blogController = {
         let obj = ctx.params;
         try {
             await blogModel.getCategoriesModel(obj).then(result => {
-                //console.log('getCategoryList',result)
+                result.map(item => {
+                    return replaceUnderlineOrCamel(item,false)
+                })
                 ctx.body = result;
                 next()
             })
@@ -79,8 +148,12 @@ const blogController = {
     },
     getCategoryDetail: async (ctx,next) => {
         let obj = ctx.params;
+        let where = transform2Where(obj);
         try{
-            await blogModel.getCategoryDetailModel(obj).then(result => {
+            await blogModel.getCategoryDetailModel(where).then(result => {
+                result.map(item => {
+                    return replaceUnderlineOrCamel(item,false);
+                });
                 ctx.response.body = result[0];
                 next()
             })
@@ -90,6 +163,8 @@ const blogController = {
     },
     createNewCategory:async (ctx,next) => {
         let obj = ctx.params;
+        obj.categoryOid = uuid.v1();
+        obj.createTime = obj.createTime || dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
         try{
             await blogModel.createNewCategoryModel(obj).then(result => {
                 ctx.response.body = result;
@@ -101,10 +176,13 @@ const blogController = {
     },
     updateCategory:async (ctx,next) => {
         let obj = ctx.params;
-        //('blogController updateCategory obj',obj);
-        if(obj.createTime) delete obj.createTime;
+        let whereObj = {
+            categoryOid: obj.categoryOid
+        }
+        let whereArr = transform2Where(whereObj);
+        let updateArr = transform2Where(obj);
         try{
-            await blogModel.updateCategoryModel(obj).then(result => {
+            await blogModel.updateCategoryModel(updateArr,whereArr).then(result => {
                 ctx.response.body = result;
                 next()
             })
@@ -114,9 +192,10 @@ const blogController = {
     },
     deleteCategory:async (ctx,next) => {
         let obj = ctx.params;
+        let whereArr = transform2Where(obj);
        // console.log('blogController deleteCategory obj',obj);
         try{
-            await blogModel.deleteCategoryModel(obj).then(result => {
+            await blogModel.deleteCategoryModel(whereArr).then(result => {
                 ctx.response.body = result;
                 next()
             })
