@@ -5,21 +5,21 @@ const uuid = require('uuid');
 
 const blogController = {
     getBlogList: async (ctx,next) => {
-         let obj = ctx.params;
-         console.log(obj);
+        let obj = ctx.params;
+        console.log(obj);
 
-         const limit = obj.page || obj.size ? {
+        const limit = obj.page || obj.size ? {
             page: Number(obj.page) || 1,
             size: Number(obj.size) || 10
-         } : null;
-         const sortByVal = obj.sortBy;
-         const arr = ['page','size','sortBy'];
-         //不作为where子句的条件，没有这个列
-         Object.keys(obj).forEach(item => {
-             if(arr.includes(item)){
-                 delete obj[item];
-             }
-         })
+        } : null;
+        const sortByVal = obj.sortBy;
+        const arr = ['page','size','sortBy'];
+        //不作为where子句的条件，没有这个列
+        Object.keys(obj).forEach(item => {
+            if(arr.includes(item)){
+                delete obj[item];
+            }
+        })
 
         const whereArr = transform2Where(obj);
         try {
@@ -191,6 +191,7 @@ const blogController = {
     },
     updateCategory:async (ctx,next) => {
         let obj = ctx.params;
+        obj.createTime = dateFormat(obj.createTime,'yyyy-MM-dd hh:mm:ss');
         let whereObj = {
             categoryOid: obj.categoryOid
         }

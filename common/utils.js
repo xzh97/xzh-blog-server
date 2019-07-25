@@ -3,7 +3,7 @@
  * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-07-15 22:45:58
+ * Last modified  : 2019-07-25 22:21:10
  */
 
 /**
@@ -22,12 +22,12 @@ const dateFormat = (date, format='yyyy-MM-dd') => {
         }
     }
     let year,month,day,hour,minutes,seconds;
-    year = date.getFullYear();
-    month = date.getMonth() + 1;
-    day = date.getDate();
-    hour = date.getHours();
-    minutes = date.getMinutes();
-    seconds = date.getSeconds();
+    year = d.getFullYear();
+    month = d.getMonth() + 1;
+    day = d.getDate();
+    hour = d.getHours();
+    minutes = d.getMinutes();
+    seconds = d.getSeconds();
 
     let str = format;
     str = str.replace('yyyy',year)

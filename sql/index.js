@@ -37,7 +37,7 @@ const query = (sql, values) => {
 const getDataList = async (table, selectStr, whereStr, limit) => {
     let _sql = `SELECT ${selectStr} FROM ${table} `;
     if(whereStr.length){
-        _sql += `${whereStr} `
+        _sql += `WHERE ${whereStr} `
     }
     if (limit) {
         _sql += `LIMIT ${(limit.page - 1) * limit.size},${limit.size}`;
