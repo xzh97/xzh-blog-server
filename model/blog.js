@@ -167,6 +167,7 @@ const addNewCommentModel = async (params) => {
     console.log('addNewCommentModel params',params);
     const {keys, vals} = filterCamel(params);
     let data = await insertData('xzh_blog_comments',keys,vals);
+    console.log(data);
 
     if(data.affectedRows > 0){
         return getErrorMessage('CREATE_SUCCESS');

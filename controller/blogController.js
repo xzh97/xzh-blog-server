@@ -74,18 +74,20 @@ const blogController = {
                 let commentsList = result[2].map(item => {
                     return replaceUnderlineOrCamel(item,false);
                 });
+               
                 function assemblyComments(data){
                     let result = [],children = [];
                     result = data.filter(item => !item.parentOid);
                     children = data.filter(item => item.parentOid);
+                    console.log('assemblyComments',children);
                     result.map(item => {
-                        item.children = children.filter(item2 => {item2.parentOid === item.commentOid}) || [];
+                        item.children = children.filter(item2 => item2.parentOid === item.commentOid) || [];
                     })
                     return result;
                 }
                 data[0].category = totalCategories.filter(item => { return item.categoryOid === data[0].category});
                 data[0].comments = assemblyComments(commentsList);
-                console.log(data);
+                //console.log(data);
                 ctx.response.body = data[0];
                 next()
             })
