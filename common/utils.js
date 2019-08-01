@@ -3,7 +3,7 @@
  * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-07-25 22:21:10
+ * Last modified  : 2019-08-01 22:33:33
  */
 
 /**
@@ -97,7 +97,7 @@ const isEmptyArray = (arr) => {
  * @return {string}
 */
 const removeTag = (str) => {
-    //console.log(str);
+    console.log(str);
     return str.replace(/<[^>]+>/g, "").substr(0,100);
 }
 
@@ -174,17 +174,17 @@ const filterCamel = (obj = {},char = '_') => {
  * @return {Array} result
  */
 const transform2Where = (obj = {}, flag = true) => {
-        let arr = Object.keys(obj),result = [];
-        arr.forEach(key => {
-            let item = {
-                key: str2Underline(key),
-                value: obj[key]
-            }
-            result.push(item)
-        });
+    let arr = Object.keys(obj),result = [];
+    arr.forEach(key => {
+        let item = {
+            key: str2Underline(key),
+            value: obj[key]
+        }
+        result.push(item)
+    });
 
-        return result;
-    };
+    return result;
+};
 
 /**
  * @param {Array} arr 要处理的数组

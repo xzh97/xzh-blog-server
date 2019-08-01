@@ -14,8 +14,8 @@ const query = (sql, values) => {
             }
             else {
                 connection.query(sql, values, (err, rows) => {
-                    console.log(err);
                     if (err) {
+                        console.log('query err',err);
                         reject(err)
                     }
                     else {

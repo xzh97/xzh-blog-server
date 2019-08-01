@@ -103,6 +103,7 @@ const blogController = {
         values.description = removeTag(values.content);
         try{
             await blogModel.createNewBlogModel(values).then(result => {
+                console.log(result);
                 ctx.response.body = result;
                 next()
             })

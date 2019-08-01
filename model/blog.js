@@ -1,6 +1,6 @@
 const {getDataListCount, getDataList, getData, insertData, updateData, deleteData} = require('../sql/index');
 const getErrorMessage = require('../common/message');
-const {dateFormat, filterCamel, transform2KeyValue} = require('../common/utils');
+const {dateFormat, filterCamel, transform2KeyValue, transform2Where} = require('../common/utils');
 const uuid = require('uuid');
 
 
@@ -101,7 +101,7 @@ const getBlogListModel = async (params,limit) => {
  */
 const getBlogDetailModel = async (params) => {
     let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time';
-    return Promise.all([await getData('xzh_blog', fieldsStr, params),await getCategoriesModel(),await getBlogComments(params)]).then(response => {
+    return await Promise.all([ getData('xzh_blog', fieldsStr, params), getCategoriesModel(), getBlogComments(params)]).then(response => {
         //console.log(response);
         return response;
     })
@@ -109,18 +109,34 @@ const getBlogDetailModel = async (params) => {
 
 /**
  * @param {Object} values
+ * @param {Array} 
  * @description 新增文章
  * @return {errCode,errMsg}
  */
 const createNewBlogModel = async (values) => {
     const {keys, vals} = filterCamel(values);
-    let data = await insertData('xzh_blog', keys, vals);
-    if(data.affectedRows > 0){
-        return getErrorMessage('CREATE_SUCCESS');
+    let category = {
+        key: 'category_oid',
+        value: values.category
     }
-    else{
-        return getErrorMessage('CREATE_FAILED');
-    }
+    // todo 为什么感觉这么写  感觉好捞啊 看下要怎么改善
+    return await Promise.all([insertData('xzh_blog', keys, vals), getData('xzh_blog_category','count',[category])]).then(async res => {
+        console.log(res);
+        let countObj = {
+            key: 'count',
+            value: ++ res[1][0].count
+        }
+        let countStr = transform2KeyValue([countObj]);
+        let categoryWhereStr = transform2KeyValue([category]);
+        let data = await updateData('xzh_blog_category',countStr,categoryWhereStr);
+        if(res[0].affectedRows && data.affectedRows){
+            return getErrorMessage('CREATE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('CREATE_FAILED');
+        }
+    })
+       
 }
 
 /**
