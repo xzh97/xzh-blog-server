@@ -73,8 +73,9 @@ const init = () => {
         console.log(isExist)
         if(!isExist){
             createTable(sqlMap[table]).then(res => {
-                console.log(res);
+                console.log(`create table ${table} success`);
             }).catch(err => {
+                console.log(`create table ${table} failed, the reason is:`);
                 console.log(err);
             })
         }

@@ -115,30 +115,25 @@ const getBlogDetailModel = async (params) => {
  */
 const createNewBlogModel = async (values) => {
     const {keys, vals} = filterCamel(values);
-    let category = {
-        key: 'category_oid',
-        value: values.category
-    }
-    // todo 为什么感觉这么写  感觉好捞啊 看下要怎么改善
-    return await Promise.all([insertData('xzh_blog', keys, vals), getData('xzh_blog_category','count',[category])]).then(async res => {
-        console.log(res);
-        let countObj = {
-            key: 'count',
-            value: ++ res[1][0].count
-        }
-        let countStr = transform2KeyValue([countObj]);
-        let categoryWhereStr = transform2KeyValue([category]);
-        let data = await updateData('xzh_blog_category',countStr,categoryWhereStr);
-        if(res[0].affectedRows && data.affectedRows){
+
+    //先查询 category count
+    let categoryCount = await getData('xzh_blog_category','count',[category]);
+
+    let categoryWhereStr = `category_oid=${values.category}`;
+    let countStr = `count=${categoryCount.count + 1}`;
+
+    return await Promise.all([insertData('xzh_blog', keys, vals),updateData('xzh_blog_category',countStr,categoryWhereStr)]).then(res => {
+        //console.log(res); 
+        if(res[0].affectedRows && res[1].affectedRows){
             return getErrorMessage('CREATE_SUCCESS');
         }
         else{
             return getErrorMessage('CREATE_FAILED');
         }
     }).catch(err => {
+        console.log(err);
         return err
-    })
-       
+    })       
 }
 
 /**
@@ -157,21 +152,22 @@ const updateBlogModel = async (updateArr,params) => {
     let beforeUpdateObj = await getData('xzh_blog_category', 'category_oid,count', params)[0];
 
     //更新后的博客分类
-    let afterUpdateObj = updateArr.filter(item => item.key === 'category')[0];
+    let updatingObj = updateArr.filter(item => item.key === 'category')[0];
+    let updateResult,isUpdateCategory = beforeUpdateObj['category_oid'] !== updatingObj.value;
 
-    if(beforeUpdateObj['category_oid'] !== afterUpdateObj.value){
-        categoryCount = afterUpdateObj.count - 1;
+    if(isUpdateCategory){
+        categoryCount = updatingObj.count - 1;
         let updateCategoryStr = transform2KeyValue([{key:'count',value:categoryCount}]);
-        let updateCategoryWhereStr = transform2KeyValue([afterUpdateObj]);
-        let updateResult = await updateData('xzh_blog_category',updateCategoryStr,updateCategoryWhereStr);
+        let updateCategoryWhereStr = transform2KeyValue([updatingObj]);
+        updateResult = await updateData('xzh_blog_category',updateCategoryStr,updateCategoryWhereStr);
     }
 
     let data = await updateData('xzh_blog',updateStr,whereStr);
 
-    console.log(updateResult, data)
+    //console.log(updateResult, data)
 
 
-    if(updateResult.affectedRows && data.affectedRows){
+    if(isUpdateCategory ? (updateResult.affectedRows && data.affectedRows) : (data.affectedRows)){
         return getErrorMessage('UPDATE_SUCCESS');
     }
     else{
@@ -185,7 +181,14 @@ const updateBlogModel = async (updateArr,params) => {
  * @return {errCode,errMsg}
  */
 const deleteBlogModel = async (params) => {
+    //todo 只传了blogoid删不掉
     let whereStr = transform2KeyValue(params);
+    let category = [].push({
+        key: 'category_oid',
+        value: params.filter(item => item.key === 'category')[0].value
+    })
+    let categoryCount = await getData('xzh_blog_category',`count`,)
+    //let updateStr = `count=${}`
     let data = await deleteData('xzh_blog',whereStr);
     if(data.affectedRows > 0){
         return getErrorMessage('DELETE_SUCCESS');
