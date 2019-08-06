@@ -4,7 +4,6 @@
  * */
 const {query} = require('./index');
 
-//todo  晚上回去记得把dataGrip的表 复制过来。。 不然两端不能一起开发QAQ
 const sqlMap = {
     'xzh_blog':`CREATE TABLE xzh_blog (
     id int(11) NOT NULL AUTO_INCREMENT,
