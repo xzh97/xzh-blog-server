@@ -101,7 +101,7 @@ const getBlogListModel = async (params,limit) => {
  */
 const getBlogDetailModel = async (params) => {
     let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time';
-    return await Promise.all([ getData('xzh_blog', fieldsStr, params), getCategoriesModel(), getBlogComments(params)]).then(response => {
+    return await Promise.all([getData('xzh_blog', fieldsStr, params), getCategoriesModel(), getBlogComments(params)]).then(response => {
         //console.log(response);
         return response;
     })
@@ -135,6 +135,8 @@ const createNewBlogModel = async (values) => {
         else{
             return getErrorMessage('CREATE_FAILED');
         }
+    }).catch(err => {
+        return err
     })
        
 }
@@ -148,9 +150,28 @@ const createNewBlogModel = async (values) => {
 const updateBlogModel = async (updateArr,params) => {
     let updateStr = transform2KeyValue(updateArr);
     let whereStr = transform2KeyValue(params);
+    console.log(params);
+
+    let categoryCount = 0;
+    //更新前的博客分类
+    let beforeUpdateObj = await getData('xzh_blog_category', 'category_oid,count', params)[0];
+
+    //更新后的博客分类
+    let afterUpdateObj = updateArr.filter(item => item.key === 'category')[0];
+
+    if(beforeUpdateObj['category_oid'] !== afterUpdateObj.value){
+        categoryCount = afterUpdateObj.count - 1;
+        let updateCategoryStr = transform2KeyValue([{key:'count',value:categoryCount}]);
+        let updateCategoryWhereStr = transform2KeyValue([afterUpdateObj]);
+        let updateResult = await updateData('xzh_blog_category',updateCategoryStr,updateCategoryWhereStr);
+    }
+
     let data = await updateData('xzh_blog',updateStr,whereStr);
 
-    if(data.affectedRows > 0){
+    console.log(updateResult, data)
+
+
+    if(updateResult.affectedRows && data.affectedRows){
         return getErrorMessage('UPDATE_SUCCESS');
     }
     else{

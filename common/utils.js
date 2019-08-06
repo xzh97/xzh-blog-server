@@ -146,7 +146,7 @@ const replaceUnderlineOrCamel = (obj = {}, toUnderLine = true, char='_') => {
 }
 
 /**
- * @param {String} obj 要处理的对象
+ * @param {Object} obj 要处理的对象
  * @param {String} char 要替换的字符
  * @description 对象驼峰转下划线 obj:{a:1,b:2},['a,b'],[1,2]
  * @return 返回处理后的keys和对应的vals
