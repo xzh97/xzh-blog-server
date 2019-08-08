@@ -3,7 +3,7 @@
  * @author xzh
  *
  * Created at     : 2019-06-06 23:24:26 
- * Last modified  : 2019-08-01 22:33:33
+ * Last modified  : 2019-08-08 22:51:14
  */
 
 /**
@@ -173,7 +173,7 @@ const filterCamel = (obj = {},char = '_') => {
  * @return 返回处理后的数组 ex:'{a:1,b:2} --> [{key:'a',value:'1'},{key:'b',value:'2'}]'
  * @return {Array} result
  */
-const transform2Where = (obj = {}, flag = true) => {
+const transform2KeyValueStrArr = (obj = {}, flag = true) => {
     let arr = Object.keys(obj),result = [];
     arr.forEach(key => {
         let item = {
@@ -193,7 +193,7 @@ const transform2Where = (obj = {}, flag = true) => {
  * @return 返回处理后的数组 ex:'[{key:'a',value:'1'} --> a=1'
  * @return {String}
  */
-const transform2KeyValue = (arr = [], char = ',') => {
+const transform2KeyValueStr = (arr = [], char = ',') => {
     let result = [];
     arr.forEach(item => {
         let valueStr = typeof item.value === 'number' ? item.value : `'${item.value}'`
@@ -203,6 +203,19 @@ const transform2KeyValue = (arr = [], char = ',') => {
 
     return result.join(char);
 };
+
+/**
+ * @description async + await包一层try catch 
+ * @param {Function} fn 
+ * @param  {...any} params 
+ */
+const awaitHandle = async (fn,...params) => {
+    try {
+        return await fn(...params)
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -216,6 +229,6 @@ module.exports = {
     underline2Str,
     replaceUnderlineOrCamel,
     filterCamel,
-    transform2Where,
-    transform2KeyValue,
+    transform2KeyValueStrArr,
+    transform2KeyValueStr,
 }

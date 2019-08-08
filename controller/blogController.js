@@ -1,6 +1,6 @@
 const blogModel = require('../model/blog.js');
 const getErrorMessage = require('../common/message');
-const {dateFormat, pagination, removeTag, replaceUnderlineOrCamel, transform2Where} = require('../common/utils');
+const {dateFormat, pagination, removeTag, replaceUnderlineOrCamel, transform2KeyValueStrArr} = require('../common/utils');
 const uuid = require('uuid');
 
 const blogController = {
@@ -21,7 +21,7 @@ const blogController = {
             }
         })
 
-        const whereArr = transform2Where(obj);
+        const whereArr = transform2KeyValueStrArr(obj);
         try {
             await blogModel.getBlogListModel(whereArr,limit).then(result => {
                 let data = result[0].map(item => {
@@ -61,7 +61,7 @@ const blogController = {
     },
     getBlogDetail: async (ctx,next) => {
         let obj = ctx.params;
-        let whereArr = transform2Where(obj)
+        let whereArr = transform2KeyValueStrArr(obj)
         try{
             await blogModel.getBlogDetailModel(whereArr).then(result => {
                 //console.log(result);
@@ -113,13 +113,13 @@ const blogController = {
     },
     updateBlog:async (ctx,next) => {
         let obj = ctx.params;
+        console.log(obj);
             obj.description = removeTag(obj.content);
-            console.log(obj);
-        let whereObj = {
+            obj.lastUpdatedTime = dateFormat(obj.lastUpdatedTime,'yyyy-MM-dd hh:mm:ss');
+        let whereArr = transform2KeyValueStrArr({
             blogOid: obj.blogOid
-        }
-        let whereArr = transform2Where(whereObj);
-        let updateArr = transform2Where(obj);
+        });
+        let updateArr = transform2KeyValueStrArr(obj);
         try{
             await blogModel.updateBlogModel(updateArr,whereArr).then(result => {
                 ctx.response.body = result;
@@ -129,9 +129,10 @@ const blogController = {
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
+    //TODO 8.9号 把delete的看下
     deleteBlog:async (ctx,next) => {
         let obj = ctx.params;
-        let whereArr = transform2Where(obj);
+        let whereArr = transform2KeyValueStrArr(obj);
         console.log('blogController deleteBlog obj',obj);
         try{
             await blogModel.deleteBlogModel(whereArr).then(result => {
@@ -151,7 +152,7 @@ const blogController = {
             page: Number(obj.page) || 1,
             size: Number(obj.size) || 10
         } : null;
-        const whereArr = transform2Where(obj);
+        const whereArr = transform2KeyValueStrArr(obj);
         try {
             await blogModel.getCategoriesModel(whereArr,limit).then(result => {
                 result.map(item => {
@@ -166,7 +167,7 @@ const blogController = {
     },
     getCategoryDetail: async (ctx,next) => {
         let obj = ctx.params;
-        let where = transform2Where(obj);
+        let where = transform2KeyValueStrArr(obj);
         try{
             await blogModel.getCategoryDetailModel(where).then(result => {
                 result.map(item => {
@@ -198,8 +199,8 @@ const blogController = {
         let whereObj = {
             categoryOid: obj.categoryOid
         }
-        let whereArr = transform2Where(whereObj);
-        let updateArr = transform2Where(obj);
+        let whereArr = transform2KeyValueStrArr(whereObj);
+        let updateArr = transform2KeyValueStrArr(obj);
         try{
             await blogModel.updateCategoryModel(updateArr,whereArr).then(result => {
                 ctx.response.body = result;
@@ -211,7 +212,7 @@ const blogController = {
     },
     deleteCategory:async (ctx,next) => {
         let obj = ctx.params;
-        let whereArr = transform2Where(obj);
+        let whereArr = transform2KeyValueStrArr(obj);
        // console.log('blogController deleteCategory obj',obj);
         try{
             await blogModel.deleteCategoryModel(whereArr).then(result => {

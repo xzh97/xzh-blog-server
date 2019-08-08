@@ -1,6 +1,6 @@
 const config = require('../config/index');
 const mysql = require('mysql');
-const { isEmptyObj, transform2KeyValue } = require('../common/utils');
+const { isEmptyObj, transform2KeyValueStr } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
 
@@ -59,11 +59,11 @@ const getDataListCount = async (table) => {
 /**
  * @summary 查询一条数据
  * @param {string} table 表名
- * @param {string} selectStr 表数据列
- * @param {Array} params 查询条件key名
+ * @param {string} selectStr 表数据列   ex:'name,title,content'
+ * @param {Array} params 查询条件key名  ex:[key:'name',value:'xzh']
  */
 const getData = async (table, selectStr = '*', params) => {
-    let where = transform2KeyValue(params);
+    let where = transform2KeyValueStr(params);
     let _sql = `SELECT ${selectStr} FROM ${table} WHERE ${where}`;
 
     return await query(_sql);
@@ -72,10 +72,10 @@ const getData = async (table, selectStr = '*', params) => {
 /**
  * @summary 插入一条数据
  * @param {string} table 表名
- * @param {Array} keys 列名
- * @param {Array} vals 列对应的数据
+ * @param {Object} values 插入的数据
  */
-const insertData = async (table, keys, vals) => {
+const insertData = async (table, values) => {
+    const {keys, vals} = filterCamel(values);
     const keyStr = keys.join(',');
     const valueStr = keys.map(item => '?').join(',');
     let _sql = `INSERT INTO ${table} (${keyStr}) VALUE (${valueStr});`;
@@ -85,11 +85,13 @@ const insertData = async (table, keys, vals) => {
 /**
  * @summary 更新某条数据
  * @param {string} table 表名
- * @param {string} keyValueStr 需要更新的数据 key=value,
- * @param {string} whereStr where子句条件
+ * @param {Array} updateArr 需要更新的数据 [{key:'a',value:'1'}],
+ * @param {Array} whereArr where子句条件 [{key:'a',value:'1'}]
  */
-const updateData = async (table, keyValueStr, whereStr) => {
-    let _sql = `UPDATE ${table} SET ${keyValueStr} WHERE ${whereStr};`;
+const updateData = async (table, updateArr, whereArr) => {
+    let updateStr = transform2KeyValueStr(updateArr);
+    let whereStr = transform2KeyValueStr(whereArr);
+    let _sql = `UPDATE ${table} SET ${updateStr} WHERE ${whereStr};`;
     return await query(_sql)
 }
 
