@@ -151,7 +151,7 @@ const updateBlogModel = async (updateArr,whereArr) => {
     try {
         //更新前的blog数据
         let blogData = await getData('xzh_blog', '*', whereArr);
-        //更新前的博客分类
+        //更新前的博客分类 
         let beforeUpdateObj = await getData('xzh_blog_category', 'category_oid,count', [{key:'category_oid',value:blogData[0].category}]);
 
         //更新后的博客分类
