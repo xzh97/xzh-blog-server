@@ -1,6 +1,6 @@
 const config = require('../config/index');
 const mysql = require('mysql');
-const { isEmptyObj, transform2KeyValueStr } = require('../common/utils');
+const { isEmptyObj, transform2KeyValueStr, filterCamel } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
 
@@ -32,11 +32,12 @@ const query = (sql, values) => {
  * @summary 查询数据(可分页)
  * @param {String} table 表名
  * @param {String} selectStr 表数据列
- * @param {String} whereStr where子句
+ * @param {Array} params keyvalue数组
  * @param {object} limit 分页 {page:number,size:number} or null
  */
-const getDataList = async (table, selectStr, whereStr, limit) => {
+const getDataList = async (table, selectStr, params, limit) => {
     let _sql = `SELECT ${selectStr} FROM ${table} `;
+    let whereStr = transform2KeyValueStr(params);
     if(whereStr.length){
         _sql += `WHERE ${whereStr} `
     }
@@ -96,7 +97,7 @@ const updateData = async (table, updateArr, whereArr) => {
 }
 
 /**
- * @summary 删除数据（逻辑删除）
+ * @summary 删除数据（物理删除）
  * @param {string} table 表名
  * @param {string} whereStr where子句条件
  */

@@ -173,7 +173,7 @@ const filterCamel = (obj = {},char = '_') => {
  * @return 返回处理后的数组 ex:'{a:1,b:2} --> [{key:'a',value:'1'},{key:'b',value:'2'}]'
  * @return {Array} result
  */
-const transform2KeyValueStrArr = (obj = {}, flag = true) => {
+const transform2KeyValueArr = (obj = {}, flag = true) => {
     let arr = Object.keys(obj),result = [];
     arr.forEach(key => {
         let item = {
@@ -229,6 +229,6 @@ module.exports = {
     underline2Str,
     replaceUnderlineOrCamel,
     filterCamel,
-    transform2KeyValueStrArr,
+    transform2KeyValueArr,
     transform2KeyValueStr,
 }

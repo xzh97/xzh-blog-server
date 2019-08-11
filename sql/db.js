@@ -17,8 +17,9 @@ const sqlMap = {
     content longtext COMMENT '博客具体内容',
     last_updated_time datetime NOT NULL COMMENT '最后更新时间',
     private tinyint(1) DEFAULT '0' COMMENT '是否私密（只有用户能看到）',
-    author varchar(50) NOT NULL COMMENT '作者 存oid',
-    category varchar(100) NOT NULL COMMENT '个人分类 1,2,3,4',
+    author varchar(50) NOT NULL COMMENT '作者',
+    category varchar(100) NOT NULL COMMENT '博客分类',
+    status int(11) NOT NULL DEFAULT '1' COMMENT '博客状态 1为正常情况， 2为逻辑删除',
     PRIMARY KEY (id),
     UNIQUE KEY xzh_blog_blog_oid_uindex (blog_oid)
   ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客内容';`,
