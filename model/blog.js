@@ -214,9 +214,9 @@ const deleteBlogModel = async (params) => {
         category[0].count --;
         let categoryKeyValueArr = transform2KeyValueArr(category[0]);
         
-        console.log(category_oid);
+        //console.log(category_oid);
         let updateDatas = await updateCategoryModel(categoryKeyValueArr,categoryKeyValueArr.filter(item => item.key === 'category_oid'));
-        console.log('updateData',updateDatas)
+        //console.log('updateData',updateDatas)
         let data = await updateData('xzh_blog',updateArr,params);
         if(updateDatas.errCode === '10003' && data.affectedRows){
             return getErrorMessage('DELETE_SUCCESS');
