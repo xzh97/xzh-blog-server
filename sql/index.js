@@ -1,6 +1,6 @@
 const config = require('../config/index');
 const mysql = require('mysql');
-const { isEmptyObj, transform2KeyValueStr, filterCamel } = require('../common/utils');
+const { awaitHandle, isEmptyObj, transform2KeyValueStr, filterCamel } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
 

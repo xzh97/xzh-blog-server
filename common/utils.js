@@ -169,7 +169,7 @@ const filterCamel = (obj = {},char = '_') => {
 /**
  * @param {String} obj 要处理的对象
  * @param {Boolean} flag 确定where条件 （or，and，） 默认 and todo 暂时先不写这个 看下先
- * @description 转换成where子句的keyValue数组
+ * @description 转换成keyValue数组
  * @return 返回处理后的数组 ex:'{a:1,b:2} --> [{key:'a',value:'1'},{key:'b',value:'2'}]'
  * @return {Array} result
  */
@@ -205,15 +205,17 @@ const transform2KeyValueStr = (arr = [], char = ',') => {
 };
 
 /**
- * @description async + await包一层try catch 
- * @param {Function} fn 
- * @param  {...any} params 
+ * @description async + await统一的错误处理
+ * @param {Function} fn
+ * @param {...any} params
  */
-const awaitHandle = async (fn,...params) => {
+const awaitErrorHandle = async (fn, ...params) => {
     try {
+        console.log(params);
         return await fn(...params)
     } catch (error) {
         console.log(error);
+        return error
     }
 }
 
@@ -231,4 +233,5 @@ module.exports = {
     filterCamel,
     transform2KeyValueArr,
     transform2KeyValueStr,
+    awaitErrorHandle
 }

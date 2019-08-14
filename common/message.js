@@ -19,16 +19,16 @@ const errorMessageMap = {
     'SQL_ERROR':'sql错误'
 }
 const errorCodeMap = {
-    'CREATE_SUCCESS': '10001',
-    'CREATE_FAILED': '10002',
-    'UPDATE_SUCCESS': '10003',
-    'UPDATE_FAILED': '10004',
-    'DELETE_SUCCESS': '10005',
-    'DELETE_FAILED': '10006',
-    'SYSTEM_ERROR': '10007',
-    'UPLOAD_SUCCESS':'10008',
-    'UPLOAD_ERROR':'10009',
-    'SQL_ERROR':'10010'
+    'CREATE_SUCCESS': 10001,
+    'CREATE_FAILED': 10002,
+    'UPDATE_SUCCESS': 10003,
+    'UPDATE_FAILED': 10004,
+    'DELETE_SUCCESS': 10005,
+    'DELETE_FAILED': 10006,
+    'SYSTEM_ERROR': 10007,
+    'UPLOAD_SUCCESS':10008,
+    'UPLOAD_ERROR':10009,
+    'SQL_ERROR':10010
 }
 
 const getErrorMessage = (key)=>{

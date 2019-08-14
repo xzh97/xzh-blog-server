@@ -129,7 +129,6 @@ const blogController = {
             return getErrorMessage('SYSTEM_ERROR')
         }
     },
-    //TODO 8.9号 把delete的两个方法看下
     deleteBlog:async (ctx,next) => {
         let obj = ctx.params;
         let whereArr = transform2KeyValueArr(obj);
