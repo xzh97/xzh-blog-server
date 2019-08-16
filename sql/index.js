@@ -50,9 +50,10 @@ const getDataList = async (table, selectStr, params, limit) => {
 /**
  * @summary 查询数据条数
  * @param {string} table 表名
+ * @param {string} key 按照这个去计算
  */
-const getDataListCount = async (table) => {
-    let _sql = `SELECT count(*) FROM ${table}`;
+const getDataListCount = async (table,key = '*') => {
+    let _sql = `SELECT count(${key}) FROM ${table}`;
 
     return await query(_sql);
 }

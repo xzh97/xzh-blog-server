@@ -17,8 +17,13 @@ const { transform2KeyValueStr, transform2KeyValueArr, awaitErrorHandle} = requir
  * @return {Array}
  */
 const getCategoriesModel = async (params,limit) => {
-    let keys = 'category_oid,name,create_time,count';
-    return await getDataList('xzh_blog_category',keys,params,limit);
+    try {
+        let keys = 'category_oid,name,create_time,count';
+        return await getDataList('xzh_blog_category',keys,params,limit);
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
 }
 /**
  * @param {Array} params
@@ -26,8 +31,13 @@ const getCategoriesModel = async (params,limit) => {
  * @return Object {}
  */
 const getCategoryDetailModel = async (params) => {
-    let fieldsStr = 'category_oid,name,create_time,count';
-    return await getData('xzh_blog_category', fieldsStr, params);
+    try {
+        let fieldsStr = 'category_oid,name,create_time,count';
+        return await getData('xzh_blog_category', fieldsStr, params);
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
 }
 
 /**
@@ -47,7 +57,6 @@ const createNewCategoryModel = async (values) => {
         console.log(error)
         return error;
     }
-    
 }
 
 /**
@@ -57,14 +66,20 @@ const createNewCategoryModel = async (values) => {
  * @return {errCode,errMsg}
  */
 const updateCategoryModel = async (updateArr,whereArr) => {
-    let data = await updateData('xzh_blog_category',updateArr,whereArr);
+    try{
+        let data = await updateData('xzh_blog_category',updateArr,whereArr);
 
-    if(data.affectedRows > 0){
-        return getErrorMessage('UPDATE_SUCCESS');
+        if(data.affectedRows > 0){
+            return getErrorMessage('UPDATE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('UPDATE_FAILED');
+        }
+    } catch (e) {
+        console.log(err);
+        return err;
     }
-    else{
-        return getErrorMessage('UPDATE_FAILED');
-    }
+
 }
 
 /**
@@ -73,13 +88,18 @@ const updateCategoryModel = async (updateArr,whereArr) => {
  * @return {errCode,errMsg}
  */
 const deleteCategoryModel = async (params) => {
-    let whereStr = transform2KeyValueStr(params);
-    let data = await deleteData('xzh_blog_category',whereStr);
-    if(data.affectedRows > 0){
-        return getErrorMessage('DELETE_SUCCESS');
-    }
-    else{
-        return getErrorMessage('DELETE_FAILED');
+    try {
+        let whereStr = transform2KeyValueStr(params);
+        let data = await deleteData('xzh_blog_category',whereStr);
+        if(data.affectedRows > 0){
+            return getErrorMessage('DELETE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('DELETE_FAILED');
+        }
+    } catch (err) {
+        console.log(err);
+        return err;
     }
 }
 
@@ -94,9 +114,10 @@ const getBlogListModel = async (params,limit) => {
     try {
         params.push({key:'status', value:1})
         let keys = 'type,blog_oid,description,read_number,comment_count,title,create_time'; 
-        return Promise.all([await getDataList('xzh_blog',keys,params,limit),await getDataListCount('xzh_blog')])
-    } catch (error) {
-        return error
+        return Promise.all([await getDataList('xzh_blog',keys,params,limit),await getDataListCount('xzh_blog','blog_oid')])
+    } catch (err) {
+        console.log(err);
+        return err
     }
 
 }
@@ -106,8 +127,13 @@ const getBlogListModel = async (params,limit) => {
  * @return {Array}
  */
 const getBlogDetailModel = async (params) => {
-    let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time,status';
-    return await Promise.all([getData('xzh_blog', fieldsStr, params), getCategoriesModel(), getBlogComments(params)])
+    try {
+        let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time,status';
+        return await Promise.all([getData('xzh_blog', fieldsStr, params), getCategoriesModel(), getBlogComments(params)])
+    } catch (err) {
+        console.log(err);
+        return err
+    }
 }
 
 /**
@@ -184,9 +210,9 @@ const updateBlogModel = async (updateArr,whereArr) => {
         else{
             return getErrorMessage('UPDATE_FAILED');
         }
-    } catch (error) {
-        console.log(error);
-        return error;
+    } catch (err) {
+        console.log(err);
+        return err;
     }
 }
 
@@ -215,8 +241,9 @@ const deleteBlogModel = async (params) => {
         else{
             return getErrorMessage('DELETE_FAILED');
         }
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
+        return err;
     }
 }
 
@@ -226,16 +253,19 @@ const deleteBlogModel = async (params) => {
  * @return data
  */
 const addNewCommentModel = async (values) => {
-    console.log('addNewCommentModel params',values);
-    let data = await insertData('xzh_blog_comments',values);
-    console.log('addNewCommentModel',data);
+    try {
+        let data = await insertData('xzh_blog_comments',values);
+        if(data.affectedRows > 0){
+            return getErrorMessage('CREATE_SUCCESS');
+        }
+        else{
+            return getErrorMessage('CREATE_FAILED');
+        }
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
 
-    if(data.affectedRows > 0){
-        return getErrorMessage('CREATE_SUCCESS');
-    }
-    else{
-        return getErrorMessage('CREATE_FAILED');
-    }
 }
 
 /**
@@ -244,8 +274,14 @@ const addNewCommentModel = async (values) => {
  * @return data
  */
 const getBlogComments = async (params) => {
-    let selectStr = 'comment_oid,parent_oid,content,author,create_time';
-    return await getData('xzh_blog_comments',selectStr,params);
+    try {
+        let selectStr = 'comment_oid,parent_oid,content,author,create_time';
+        return await getData('xzh_blog_comments',selectStr,params);
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+
 }
 
 

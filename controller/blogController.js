@@ -65,13 +65,14 @@ const blogController = {
         try{
             await blogModel.getBlogDetailModel(whereArr).then(result => {
                 //console.log(result);
-                let data = result[0].map(item => {
+                let [data,totalCategories,commentsList] = result;
+                data.map(item => {
                     return replaceUnderlineOrCamel(item,false);
                 });
-                let totalCategories = result[1].map(item => {
+                totalCategories.map(item => {
                     return replaceUnderlineOrCamel(item,false);
                 });
-                let commentsList = result[2].map(item => {
+                commentsList.map(item => {
                     return replaceUnderlineOrCamel(item,false);
                 });
                
