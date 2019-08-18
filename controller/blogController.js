@@ -5,34 +5,35 @@ const uuid = require('uuid');
 
 const blogController = {
     getBlogList: async (ctx,next) => {
-        let obj = ctx.params;
-        console.log(obj);
-
-        const limit = obj.page || obj.size ? {
-            page: Number(obj.page) || 1,
-            size: Number(obj.size) || 10
-        } : null;
-        const sortByVal = obj.sortBy;
-        const arr = ['page','size','sortBy'];
-        //不作为where子句的条件，没有这个列
-        Object.keys(obj).forEach(item => {
-            if(arr.includes(item)){
-                delete obj[item];
-            }
-        })
-
-        const whereArr = transform2KeyValueArr(obj);
         try {
+            let obj = ctx.params;
+            console.log(obj);
+
+            const limit = obj.page || obj.size ? {
+                page: Number(obj.page) || 1,
+                size: Number(obj.size) || 10
+            } : null;
+            const sortByVal = obj.sortBy;
+            const arr = ['page','size','sortBy'];
+            //不作为where子句的条件，没有这个列
+            Object.keys(obj).forEach(item => {
+                if(arr.includes(item)){
+                    delete obj[item];
+                }
+            })
+
+            const whereArr = transform2KeyValueArr(obj);
             await blogModel.getBlogListModel(whereArr,limit).then(result => {
+                console.log(' controller getBlogList',result);
                 let data = result[0].map(item => {
                     return replaceUnderlineOrCamel(item,false)
                 }).reverse();
                 const total = result[1];
 
-                data = sortBlogList(data,sortByVal);
+                //data = sortBlogList(data,sortByVal);
 
                 //无下一页
-                let {hasNextPage, hasPrevPage, totalPage } = pagination(total[0]['count(*)'],data,limit.page,limit.size);
+                let {hasNextPage, hasPrevPage, totalPage } = pagination(total[0]['count(blog_oid)'],data,limit.page,limit.size);
 
                 function sortBlogList (data,sortBy = 'default') { //default 更新时间降序， ascending 更新时间升序 时间越早越前排, pageviews 浏览量
                     console.log(data,sortBy);
