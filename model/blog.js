@@ -275,7 +275,7 @@ const addNewCommentModel = async (values) => {
  */
 const getBlogComments = async (params) => {
     try {
-        let selectStr = 'comment_oid,parent_oid,content,author,create_time';
+        let selectStr = 'comment_oid,parent_oid,content,author,create_time,reply_comment_author';
         return await getData('xzh_blog_comments',selectStr,params);
     } catch (err) {
         console.log(err);

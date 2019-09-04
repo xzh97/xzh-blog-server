@@ -40,6 +40,7 @@ const sqlMap = {
     author varchar(50) NOT NULL COMMENT '评论者',
     email varchar(50) NOT NULL COMMENT '评论者邮箱',
     create_time datetime NOT NULL COMMENT '评论创建时间',
+    reply_comment_author varchar(50) DEFAULT NULL COMMENT '回复的评论的作者名字',
     PRIMARY KEY (id)
   ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客评论'`,
   'xzh_user':`CREATE TABLE xzh_user (
