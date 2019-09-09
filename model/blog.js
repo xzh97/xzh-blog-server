@@ -128,7 +128,7 @@ const getBlogListModel = async (params,limit) => {
  */
 const getBlogDetailModel = async (params) => {
     try {
-        let fieldsStr = 'title,content,category,type,private,blog_oid,read_number,comment_count,last_updated_time,status';
+        let fieldsStr = 'title,content,category_oid,type,private,blog_oid,read_number,comment_count,last_updated_time,status';
         return await Promise.all([getData('xzh_blog', fieldsStr, params), getCategoriesModel(), getBlogComments(params)])
     } catch (err) {
         console.log(err);
