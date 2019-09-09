@@ -9,18 +9,14 @@ const blogController = {
             let obj = ctx.params;
             console.log(obj);
 
+            //page & size 包装
             const limit = obj.page || obj.size ? {
                 page: Number(obj.page) || 1,
-                size: Number(obj.size) || 10
+                size: Number(obj.size) || 12
             } : null;
-            const sortByVal = obj.sortBy;
-            const arr = ['page','size','sortBy'];
-            //不作为where子句的条件，没有这个列
-            Object.keys(obj).forEach(item => {
-                if(arr.includes(item)){
-                    delete obj[item];
-                }
-            })
+
+            delete obj['page'];
+            delete obj['size'];
 
             const whereArr = transform2KeyValueArr(obj);
             await blogModel.getBlogListModel(whereArr,limit).then(result => {

@@ -37,7 +37,7 @@ const query = (sql, values) => {
  */
 const getDataList = async (table, selectStr, params, limit) => {
     let _sql = `SELECT ${selectStr} FROM ${table} `;
-    let whereStr = transform2KeyValueStr(params);
+    let whereStr = transform2KeyValueStr(params,' AND ');
     if(whereStr.length){
         _sql += `WHERE ${whereStr} `
     }
@@ -51,9 +51,14 @@ const getDataList = async (table, selectStr, params, limit) => {
  * @summary 查询数据条数
  * @param {string} table 表名
  * @param {string} key 按照这个去计算
+ * @param {Array} params keyvalue数组
  */
-const getDataListCount = async (table,key = '*') => {
-    let _sql = `SELECT count(${key}) FROM ${table}`;
+const getDataListCount = async (table,key = '*',params) => {
+    let _sql = `SELECT count(${key}) FROM ${table} `;
+    let whereStr = transform2KeyValueStr(params,' AND ');
+    if(whereStr.length){
+        _sql += `WHERE ${whereStr} `
+    }
 
     return await query(_sql);
 }
