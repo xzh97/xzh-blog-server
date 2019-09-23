@@ -113,7 +113,7 @@ const deleteCategoryModel = async (params) => {
 const getBlogListModel = async (params,limit) => {
     try {
         params.push({key:'status', value:1})
-        let keys = 'type,blog_oid,description,read_number,comment_count,title,create_time'; 
+        let keys = 'type,blog_oid,description,read_number,category_oid,comment_count,title,create_time';
         return Promise.all([await getDataList('xzh_blog',keys,params,limit),await getDataListCount('xzh_blog','blog_oid',params)])
     } catch (err) {
         console.log(err);
