@@ -114,7 +114,7 @@ const getBlogListModel = async (params,limit) => {
     try {
         params.push({key:'status', value:1})
         let keys = 'type,blog_oid,description,read_number,category_oid,comment_count,title,create_time';
-        return Promise.all([await getDataList('xzh_blog',keys,params,limit),await getDataListCount('xzh_blog','blog_oid',params)])
+        return await Promise.all([getDataList('xzh_blog',keys,params,limit), getDataListCount('xzh_blog','blog_oid',params), getCategoriesModel(),])
     } catch (err) {
         console.log(err);
         return err
@@ -169,42 +169,62 @@ const createNewBlogModel = async (values) => {
 }
 
 /**
- * @param {Array} updateArr
- * @param {Array} whereArr
+ * @param {Array} updateArr 需要更新的数据
+ * @param {Array} whereArr sql语句的where子句
  * @description 修改文章
  * @return {errCode,errMsg}
  */
 const updateBlogModel = async (updateArr,whereArr) => {
     try {
-        let category1;  //更新前分类
-        let category2;  //更新后分类
+        console.log('updateBlogModel updateArr',updateArr);
+        let category1Oid;  //更新前分类Oid
+        let category2Oid;  //更新后分类Oid
 
-        //获取更新前的博客分类 
-        let blogData = await getBlogDetailModel(whereArr);
-        let beforeUpdateObj = await getCategoryDetailModel([{key:'category_oid',value:blogData[0].category}]);
-        //console.log('beforeUpdateObj',beforeUpdateObj);
-        let category1UpdateArr = [{key: 'category_oid', value:beforeUpdateObj[0].category_oid}]; //转换成keyvalue数组
+        //获取更新前博客数据
+        let [beforeUpdateBlogData, blogCategories,comment] = await getBlogDetailModel(whereArr);
+        //console.log('updateBlogModel beforeUpdateBlogData',beforeUpdateBlogData[0]);
+        //console.log('updateBlogModel blogCategories',blogCategories);
 
-        //更新后的博客分类
-        let updatingObj = updateArr.filter(item => item.key === 'category')[0];
-        let category2UpdateArr = [{key: 'category_oid', value:updatingObj.value}]; //转换成keyvalue数组
-        let updatingCategory = await getCategoryDetailModel(category2UpdateArr);
+        //找到两个分类oid 并赋值
+        category1Oid = beforeUpdateBlogData[0]['category_oid'];
+        category2Oid = updateArr.find(item => item.key === 'category_oid').value;
 
-        //是否需要更新
-        let isUpdateCategory = beforeUpdateObj[0]['category_oid'] !== updatingObj.value;
+        let updateBlogData = await updateData('xzh_blog',updateArr,whereArr);
+        console.log('updateBlogModel updateBlogData',updateBlogData);
 
-        //更新结果
-        if(isUpdateCategory){
-            //更新前分类 -1
-            category1 = await updateCategoryModel([{key:'count',value:beforeUpdateObj[0].count - 1}],category1UpdateArr);
+        //切换了博客分类,需要更新分类的信息
+        let res1, res2;
+        if(category1Oid !== category2Oid){
+            let category1Count = blogCategories.find(category => category['category_oid'] === category1Oid)['count'];
+            let category2Count = blogCategories.find(category => category['category_oid'] === category2Oid)['count'];
+            let category1UpdateArr = [
+                {
+                    key: 'category_oid',
+                    value: category1Oid
+                },
+                {
+                    key: 'count',
+                    value: category1Count - 1
+                },
+            ];
 
-            //更新后分类 +1
-            category2 = await updateCategoryModel([{key:'count',value:updatingCategory[0].count + 1}],category2UpdateArr);
+            let category2UpdateArr = [
+                {
+                    key: 'category_oid',
+                    value: category2Oid
+                },
+                {
+                    key: 'count',
+                    value: category2Count + 1
+                },
+            ];
+            res1 = await updateCategoryModel([category1UpdateArr[1]],[category1UpdateArr[0]]);
+            res2 = await updateCategoryModel([category2UpdateArr[1]],[category2UpdateArr[0]])
+            console.log(res1,res2);
         }
 
-        let data = await updateData('xzh_blog',updateArr,whereArr);
 
-        if(isUpdateCategory ? (category1.errCode === 10003 && category2.errCode === 10003 && data.affectedRows) : (data.affectedRows)){
+        if(updateBlogData.affectedRows && res1.errCode === 10003 && res2.errCode === 10003){
             return getErrorMessage('UPDATE_SUCCESS');
         }
         else{

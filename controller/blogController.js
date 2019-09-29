@@ -83,7 +83,7 @@ const blogController = {
                     })
                     return result;
                 }
-                data[0].category = totalCategories.filter(item => { return item.categoryOid === data[0].category});
+                data[0].category = totalCategories.filter(item => { return item.categoryOid === data[0].categoryOid});
                 data[0].comments = assemblyComments(commentsList);
                 //console.log(data);
                 ctx.response.body = data[0];
