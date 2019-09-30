@@ -144,9 +144,9 @@ const getBlogDetailModel = async (params) => {
 const createNewBlogModel = async (values) => {
     try {
         //先查询 category count
-        let category = [{ key:'category_oid',value:values.category }];
+        let category = [{ key:'category_oid',value:values.categoryOid }];
         let categoryCount = await getCategoryDetailModel(category);
-        //console.log(categoryCount);
+        console.log('createNewBlogModel count',categoryCount);
 
         //在插入新数据 以及 category.count ++;
         let count = [{key:'count', value:categoryCount[0].count + 1}];
@@ -224,7 +224,7 @@ const updateBlogModel = async (updateArr,whereArr) => {
         }
 
 
-        if(updateBlogData.affectedRows && res1.errCode === 10003 && res2.errCode === 10003){
+        if(updateBlogData.affectedRows){
             return getErrorMessage('UPDATE_SUCCESS');
         }
         else{
