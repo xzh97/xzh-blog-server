@@ -17,22 +17,16 @@ const upload = file => {
         return fileUrl.substr(7) + fileName
     }
 }
-//判断filepath是否存在，不存在就创建一个
+//判断filePath是否存在，不存在就创建一个
 const UploadPath = (fileUrl,fileName) => {
     let dirPath = parentPath + fileUrl;
     console.log('UploadPath dirPath',dirPath);
     if(!fs.existsSync(dirPath)){
-        fs.mkdir(dirPath, err => {
-            if(err) {
-                throw new Error(err);   
-            }
-            else{
-                return path.join(dirPath + fileName);
-            }
-        })
+        fs.mkdirSync(dirPath);
+        return path.join(dirPath + fileName);
     }
     else{
         return path.join(dirPath + fileName);
     }
-}
+};
 module.exports = upload
