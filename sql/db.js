@@ -18,7 +18,7 @@ const sqlMap = {
     last_updated_time datetime NOT NULL COMMENT '最后更新时间',
     private tinyint(1) DEFAULT '0' COMMENT '是否私密（只有用户能看到）',
     author varchar(50) NOT NULL COMMENT '作者',
-    category varchar(100) NOT NULL COMMENT '博客分类',
+    category_oid varchar(100) NOT NULL COMMENT '博客分类',
     status int(11) NOT NULL DEFAULT '1' COMMENT '博客状态 1为正常情况， 2为逻辑删除',
     PRIMARY KEY (id),
     UNIQUE KEY xzh_blog_blog_oid_uindex (blog_oid)
