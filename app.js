@@ -46,6 +46,9 @@ app.use(async (ctx, next) => {
       ...params,
       ...ctx.query
     };
+    ctx.set('Access-Control-Allow-Origin', 'http://122.51.73.210:3000')
+    ctx.set('Access-Control-Allow-Methods','GET,POST,OPTIONS');
+    ctx.set('Access-Control-Allow-Headers','Keep-Alive,User-Agent,Cache-Control,Content-Type,Authorization');
     await next();
   });
 
