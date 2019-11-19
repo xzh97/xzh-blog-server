@@ -1,6 +1,6 @@
 const blogModel = require('../model/blog.js');
 const getErrorMessage = require('../common/message');
-const {dateFormat, pagination, removeTag, replaceUnderlineOrCamel, transform2KeyValueArr} = require('../common/utils');
+const {dateFormat, pagination, removeTag, replaceUnderlineOrCamel, transform2KeyValueArr, checkResponse} = require('../common/utils');
 const uuid = require('uuid');
 
 const blogController = {
@@ -44,12 +44,12 @@ const blogController = {
                     return data
                 }
 
-                ctx.body = {
+                ctx.body = checkResponse({
                     hasNextPage,
                     hasPrevPage,
                     totalPage,
                     data
-                };
+                });
                 next()
             })
         }catch(err){
@@ -86,7 +86,7 @@ const blogController = {
                 data[0].category = totalCategories.filter(item => { return item.categoryOid === data[0].categoryOid});
                 data[0].comments = assemblyComments(commentsList);
                 //console.log(data);
-                ctx.response.body = data[0];
+                ctx.response.body = checkResponse(data[0]);
                 next()
             })
         }catch(err){
@@ -102,7 +102,7 @@ const blogController = {
         try{
             await blogModel.createNewBlogModel(values).then(result => {
                 console.log(result);
-                ctx.response.body = result;
+                ctx.response.body = checkResponse(result);
                 next()
             })
         }catch(err){
@@ -120,7 +120,10 @@ const blogController = {
         let updateArr = transform2KeyValueArr(obj);
         try{
             await blogModel.updateBlogModel(updateArr,whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.response.body = checkResponse(result);
+                if(result.code === 'ER_PARSE_ERROR'){
+                    ctx.response.status = 500;
+                }
                 next()
             })
         }catch(err){
@@ -133,7 +136,7 @@ const blogController = {
         console.log('blogController deleteBlog obj',obj);
         try{
             await blogModel.deleteBlogModel(whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.response.body = checkResponse(result);
                 next()
             })
         }catch(err){
@@ -155,7 +158,7 @@ const blogController = {
                 result.map(item => {
                     return replaceUnderlineOrCamel(item,false)
                 })
-                ctx.body = result;
+                ctx.response.body = checkResponse(result);
                 next()
             })
         }catch(err){
@@ -170,7 +173,7 @@ const blogController = {
                 result.map(item => {
                     return replaceUnderlineOrCamel(item,false);
                 });
-                ctx.response.body = result[0];
+                ctx.response.body = checkResponse(result[0]);
                 next()
             })
         }catch(err){
@@ -183,7 +186,7 @@ const blogController = {
         obj.createTime = obj.createTime || dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
         try{
             await blogModel.createNewCategoryModel(obj).then(result => {
-                ctx.response.body = result;
+                ctx.response.body = checkResponse(result);
                 next()
             })
         }catch(err){
@@ -199,7 +202,7 @@ const blogController = {
         let updateArr = transform2KeyValueArr(obj);
         try{
             await blogModel.updateCategoryModel(updateArr,whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.response.body = checkResponse(result);
                 next()
             })
         }catch(err){
@@ -212,7 +215,7 @@ const blogController = {
        // console.log('blogController deleteCategory obj',obj);
         try{
             await blogModel.deleteCategoryModel(whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.response.body = checkResponse(result);
                 next()
             })
         }catch(err){
@@ -226,7 +229,7 @@ const blogController = {
         obj.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
         try{
             await blogModel.addNewCommentModel(obj).then(result => {
-                ctx.response.body = result;
+                ctx.response.body = checkResponse(result);
                 next()
             })
         }catch(err){

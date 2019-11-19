@@ -24,14 +24,15 @@ const commonRouter = require('./routes/index.js');
 init();
 
 // 配置跨域
-/*app.use(async (ctx, next) => {
-    ctx.set('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With')
-    ctx.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+app.use(async (ctx, next) => {
+    ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Access-Control-Allow-Origin')
+    ctx.set('Access-Control-Allow-Origin', 'http://122.51.73.210');
     ctx.set('Access-Control-Allow-Methods', 'PUT,DELETE,POST,GET');
-    ctx.set('Access-Control-Allow-Credentials', true);
-    ctx.set('Access-Control-Max-Age', 3600 * 24);
+    if (ctx.request.method === "OPTIONS") {
+        ctx.response.status = 200;
+    }
  await next();
-});*/
+});
 
 //get和post请求参数
 app.use(async (ctx, next) => {
@@ -46,9 +47,6 @@ app.use(async (ctx, next) => {
       ...params,
       ...ctx.query
     };
-    ctx.set('Access-Control-Allow-Origin', 'http://122.51.73.210:3000')
-    ctx.set('Access-Control-Allow-Methods','GET,POST,OPTIONS');
-    ctx.set('Access-Control-Allow-Headers','Keep-Alive,User-Agent,Cache-Control,Content-Type,Authorization');
     await next();
   });
 

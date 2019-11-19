@@ -217,7 +217,21 @@ const awaitErrorHandle = async (fn, ...params) => {
         console.log(error);
         return error
     }
-}
+};
+/**
+ * @desc 检查接口返回信息
+ * @param res 数据
+ * */
+const checkResponse = (res) => {
+    console.log('checkResponse',res);
+    if(!res.errorCode){
+        //sql 错误
+        if(res.code === 'ER_PARSE_ERROR'){
+            res.errMsg = res.sqlMessage;
+        }
+    }
+    return res;
+};
 
 
 
@@ -233,5 +247,6 @@ module.exports = {
     filterCamel,
     transform2KeyValueArr,
     transform2KeyValueStr,
-    awaitErrorHandle
+    awaitErrorHandle,
+    checkResponse
 }
