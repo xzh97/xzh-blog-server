@@ -60,14 +60,14 @@ const tableArr = ['xzh_blog','xzh_blog_category','xzh_blog_comments','xzh_user']
 
 const createTable = async sql => {
     return await query(sql)
-}
+};
 
 const checkTableIsExist = async table => {
     let _sql = `show tables like '${table}'`
     let result = await query(_sql);
     //console.log('checkTableIsExist',table,result);
     return result.length;
-}
+};
 
 const init = () => {
     tableArr.forEach(async table => {

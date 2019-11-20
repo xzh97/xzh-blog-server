@@ -1,6 +1,6 @@
 const config = require('../config/index');
 const mysql = require('mysql');
-const { awaitHandle, isEmptyObj, transform2KeyValueStr, filterCamel } = require('../common/utils');
+const { errorHandler, transform2KeyValueStr, filterCamel, } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
 
@@ -16,7 +16,7 @@ const query = (sql, values) => {
                 connection.query(sql, values, (err, rows) => {
                     if (err) {
                         console.log('query err',err);
-                        reject(err)
+                        reject(errorHandler(err))
                     }
                     else {
                         resolve(rows)
@@ -105,9 +105,10 @@ const updateData = async (table, updateArr, whereArr) => {
 /**
  * @summary 删除数据（物理删除）
  * @param {string} table 表名
- * @param {string} whereStr where子句条件
+ * @param {Array} whereArr where子句条件
  */
-const deleteData = async (table, whereStr) => {
+const deleteData = async (table, whereArr) => {
+    let whereStr = transform2KeyValueStr(whereArr);
     let _sql = `DELETE FROM ${table} WHERE ${whereStr};`;
     return await query(_sql)
 }

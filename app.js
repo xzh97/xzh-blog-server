@@ -25,16 +25,29 @@ init();
 
 // 配置跨域
 app.use(async (ctx, next) => {
-    ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Access-Control-Allow-Origin')
-    ctx.set('Access-Control-Allow-Origin', 'http://122.51.73.210');
-    ctx.set('Access-Control-Allow-Methods', 'PUT,DELETE,POST,GET');
-    if (ctx.request.method === "OPTIONS") {
-        ctx.response.status = 200;
+    let reqOrigin = ctx.req.headers.origin;
+
+    function isAllowedOrigin(origin){
+        const whiteList = [
+            'http://122.51.73.210',
+            'http://122.51.73.210:3030',
+        ];
+        console.log('isAllowedOrigin',whiteList.includes(origin));
+        return whiteList.includes(origin);
+
     }
- await next();
+    if(isAllowedOrigin(reqOrigin)){
+        ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Access-Control-Allow-Origin')
+        ctx.set('Access-Control-Allow-Origin', ctx.req.headers.origin);
+        ctx.set('Access-Control-Allow-Methods', 'PUT,DELETE,POST,GET,OPTIONS');
+        if (ctx.request.method === "OPTIONS") {
+            ctx.response.status = 200;
+        }
+    }
+    await next();
 });
 
-//get和post请求参数
+//get和post请求参数(感觉这样子又不是很好QAQ 参数都混到一起了TAT)
 app.use(async (ctx, next) => {
   let params;
   if(typeof ctx.request.body === 'string') {
@@ -58,4 +71,4 @@ app.use(commonRouter.routes());
 
 // 在端口3000监听:
 app.listen(config.port);
-console.log('app started at port 3000...');
+console.log(`app started at port ${config.port}...`);

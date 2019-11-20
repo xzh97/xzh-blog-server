@@ -6,6 +6,8 @@
  * Last modified  : 2019-08-08 22:51:14
  */
 
+const getErrorMessage = require('./message');
+
 /**
  * @description 日期格式化
  * @param {} date
@@ -119,7 +121,7 @@ const str2Underline = (val,char='_') => {
 const underline2Str = (val) => {
     return val.replace(/\_(\w)/g, (all, letter) => {
         return letter.toUpperCase()
-      })
+    })
 }
 
 /**
@@ -194,6 +196,7 @@ const transform2KeyValueArr = (obj = {}, flag = true) => {
  * @return {String}
  */
 const transform2KeyValueStr = (arr = [], char = ',') => {
+    if(!arr.length) return '';
     let result = [];
     arr.forEach(item => {
         let valueStr = typeof item.value === 'number' ? item.value : `'${item.value}'`
@@ -205,34 +208,44 @@ const transform2KeyValueStr = (arr = [], char = ',') => {
 };
 
 /**
- * @description async + await统一的错误处理
- * @param {Function} fn
- * @param {...any} params
- */
-const awaitErrorHandle = async (fn, ...params) => {
-    try {
-        console.log(params);
-        return await fn(...params)
-    } catch (error) {
-        console.log(error);
-        return error
-    }
-};
-/**
- * @desc 检查接口返回信息
- * @param res 数据
+ * @desc 处理sql错误
+ * @param err 数据
  * */
-const checkResponse = (res) => {
-    console.log('checkResponse',res);
-    if(!res.errorCode){
-        //sql 错误
-        if(res.code === 'ER_PARSE_ERROR'){
-            res.errMsg = res.sqlMessage;
-        }
+const errorHandler = (err) => {
+    console.log('errorHandler',err);
+    if(err.code === 'ER_PARSE_ERROR'){
+        return getErrorMessage(err.code,err)
     }
-    return res;
 };
 
+/**
+ * @desc 检查接口入库数据 在post，put请求使用
+ * @param res 传入的数据
+ * @return {*}
+ * */
+const checkPostData = (res) => {
+    console.log('checkPostData',res);
+    let result = {};
+    for(let key in res){
+        // 把文本中带有单引号(')的地方改成两个单引号(') 不然入库会报错
+        result[key] = typeof res[key] === 'string' ? res[key].replace(/\'/g,"''") : res[key];
+    }
+    return result;
+};
+
+/**
+ * @desc 封装model层,错误统一捕获处理
+ * @param {function} fn 方法
+ * @return {*}
+ * */
+const modelWrapper = fn => {
+    try {
+        return fn;
+    }catch (e) {
+        console.log(`${fn.name} errorInfo:`,e);
+        return e;
+    }
+};
 
 
 module.exports = {
@@ -247,6 +260,7 @@ module.exports = {
     filterCamel,
     transform2KeyValueArr,
     transform2KeyValueStr,
-    awaitErrorHandle,
-    checkResponse
-}
+    errorHandler,
+    checkPostData,
+    modelWrapper,
+};
