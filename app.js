@@ -30,6 +30,7 @@ app.use(async (ctx, next) => {
     function isAllowedOrigin(origin){
         const whiteList = [
             'http://122.51.73.210',
+            'http://122.51.73.210:3000',
             'http://122.51.73.210:3030',
         ];
         console.log('isAllowedOrigin',whiteList.includes(origin));
