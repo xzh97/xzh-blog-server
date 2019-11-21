@@ -16,7 +16,7 @@ const errorMessageMap = {
     'SYSTEM_ERROR':'系统错误',
     'UPLOAD_SUCCESS':'上传成功',
     'UPLOAD_ERROR':'上传失败',
-    'SQL_ERROR':'sql错误'
+    'ER_PARSE_ERROR':'SQL错误',
 }
 const errorCodeMap = {
     'CREATE_SUCCESS': 10001,
@@ -28,13 +28,14 @@ const errorCodeMap = {
     'SYSTEM_ERROR': 10007,
     'UPLOAD_SUCCESS':10008,
     'UPLOAD_ERROR':10009,
-    'SQL_ERROR':10010
+    'ER_PARSE_ERROR':10010,
 }
 
-const getErrorMessage = (key)=>{
+const getErrorMessage = (key,errData)=>{
     return {
         errCode:errorCodeMap[key],
         errMsg:errorMessageMap[key],
+        errData,
     }
 }
-module.exports = getErrorMessage
+module.exports = getErrorMessage;
