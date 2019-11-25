@@ -2,7 +2,7 @@ const blogModel = require('../model/blog.js');
 const getErrorMessage = require('../common/message');
 const {
     dateFormat,
-    pagination,
+    getPagination,
     removeTag,
     transform2KeyValueArr,
     checkPostData
@@ -30,7 +30,7 @@ const blogController = {
                 let {data,total} = result;
 
                 //无下一页
-                let {hasNextPage, hasPrevPage, totalPage } = pagination(total,data,limit.page,limit.size);
+                let {hasNextPage, hasPrevPage, totalPage } = getPagination(total,data,limit.page,limit.size);
 
                 ctx.response.body = {
                     hasNextPage,

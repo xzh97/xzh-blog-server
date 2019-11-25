@@ -52,7 +52,7 @@ function addZero(value){
  * @param {number} size 每一页最大数据量
  * @return object
  */
-const pagination = (total,data,currentPage,size) => {
+const getPagination = (total,data,currentPage,size) => {
     //console.log('pagination params',total,data.length,currentPage,size);
     let hasNextPage = true,
         hasPrevPage = true,
@@ -250,7 +250,7 @@ const modelWrapper = fn => {
 
 module.exports = {
     dateFormat,
-    pagination,
+    getPagination,
     isEmptyObj,
     removeTag,
     isEmptyArray,
