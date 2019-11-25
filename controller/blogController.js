@@ -5,7 +5,8 @@ const {
     getPagination,
     removeTag,
     transform2KeyValueArr,
-    checkPostData
+    checkPostData,
+    isEmptyObj
 } = require('../common/utils');
 const uuid = require('uuid');
 
@@ -16,7 +17,7 @@ const blogController = {
             console.log(obj);
 
             //page & size 包装
-            const limit = obj.page || obj.size ? {
+            const limit = !isEmptyObj(ctx.query) ? {
                 page: Number(obj.page) || 1,
                 size: Number(obj.size) || 12
             } : null;
@@ -131,7 +132,7 @@ const blogController = {
         try {
             let obj = ctx.params;
             console.log(obj);
-            const limit = obj.page || obj.size ? {
+            const limit = !isEmptyObj(ctx.query) ? {
                 page: Number(obj.page) || 1,
                 size: Number(obj.size) || 10
             } : null;
