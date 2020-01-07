@@ -16,7 +16,7 @@ const upload = ({file, type, name}) => {
         console.log('upload filePath:', filePath);
         let upstream = fs.createWriteStream(filePath);
         fs.createReadStream(file.path).pipe(upstream);
-        if(type){
+        if(type === 'host_image'){
             let hostingPath = path.resolve(__dirname,`../../../Images/`); // 图床目录
             let cmd = `cp ${filePath} ${hostingPath}`; //复制图片到图床目录
             runCommand(cmd)
