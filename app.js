@@ -24,29 +24,30 @@ const commonRouter = require('./routes/index.js');
 init();
 
 // 配置跨域
-app.use(async (ctx, next) => {
-    let reqOrigin = ctx.req.headers.origin;
+if(process.env.NODE_ENV === 'prod'){
+    app.use(async (ctx, next) => {
+        let reqOrigin = ctx.req.headers.origin;
+        function isAllowedOrigin(origin){
+            const whiteList = [
+                'http://122.51.73.210',
+                'http://122.51.73.210:3000',
+                'http://122.51.73.210:3030',
+            ];
+            console.log('isAllowedOrigin',whiteList.includes(origin));
+            return whiteList.includes(origin);
 
-    function isAllowedOrigin(origin){
-        const whiteList = [
-            'http://122.51.73.210',
-            'http://122.51.73.210:3000',
-            'http://122.51.73.210:3030',
-        ];
-        console.log('isAllowedOrigin',whiteList.includes(origin));
-        return whiteList.includes(origin);
-
-    }
-    if(isAllowedOrigin(reqOrigin)){
-        ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Access-Control-Allow-Origin')
-        ctx.set('Access-Control-Allow-Origin', ctx.req.headers.origin);
-        ctx.set('Access-Control-Allow-Methods', 'PUT,DELETE,POST,GET,OPTIONS');
-        if (ctx.request.method === "OPTIONS") {
-            ctx.response.status = 200;
         }
-    }
-    await next();
-});
+        if(isAllowedOrigin(reqOrigin)){
+            ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Access-Control-Allow-Origin')
+            ctx.set('Access-Control-Allow-Origin', ctx.req.headers.origin);
+            ctx.set('Access-Control-Allow-Methods', 'PUT,DELETE,POST,GET,OPTIONS');
+            if (ctx.request.method === "OPTIONS") {
+                ctx.response.status = 200;
+            }
+        }
+        await next();
+    });
+}
 
 //get和post请求参数(感觉这样子又不是很好QAQ 参数都混到一起了TAT)
 app.use(async (ctx, next) => {
