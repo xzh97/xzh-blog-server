@@ -2,8 +2,9 @@ const upload = require('../common/upload.js');
 
 const commonController = {
     postUpload:async (ctx,next) => {
-        let files = ctx.request.files.file;
-        let fileUrl = await upload(files);
+        let file = ctx.request.files.file;
+        let { type, name} = ctx.params;
+        let fileUrl = await upload({file, type, name});
         ctx.body = {
             fileUrl: fileUrl
         }
