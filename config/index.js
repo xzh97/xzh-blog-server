@@ -3,7 +3,7 @@ const config = {
     database:{
         database: 'xzh',
         user: 'root',
-        password: '12345678',
+        password: 'z995194437',
         authentication:'12345678',
         port: '3306',
         host: 'localhost'

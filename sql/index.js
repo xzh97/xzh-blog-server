@@ -21,8 +21,9 @@ const query = (sql, values) => {
                     else {
                         resolve(rows)
                     }
-                    connection.release() //关闭连接
+                    
                 })
+                connection.release() //关闭连接
             }
         })
     })
