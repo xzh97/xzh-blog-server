@@ -22,9 +22,9 @@ const commonRouter = require('./routes/index.js');
 
 //初始化sql表
 init();
-
 // 配置跨域
-app.use(async (ctx, next) => {
+if(process.env.NODE_ENV === 'prod'){
+  app.use(async (ctx, next) => {
     let reqOrigin = ctx.req.headers.origin;
 
     function isAllowedOrigin(origin){
@@ -47,6 +47,11 @@ app.use(async (ctx, next) => {
     }
     await next();
 });
+}
+else{
+  // dev环境配置
+}
+
 
 //get和post请求参数(感觉这样子又不是很好QAQ 参数都混到一起了TAT)
 app.use(async (ctx, next) => {
