@@ -44,17 +44,17 @@ const sqlMap = {
     PRIMARY KEY (id)
   ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='博客评论'`,
   'xzh_user':`CREATE TABLE xzh_user (
-    id int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-    user_name varchar(20) NOT NULL COMMENT '账号',
+    id int NOT NULL AUTO_INCREMENT COMMENT 'id',
+    account varchar(20) NOT NULL COMMENT '账号',
     nickname varchar(20) NOT NULL DEFAULT 'xzh' COMMENT '昵称',
-    user_pwd varchar(50) NOT NULL COMMENT '密码',
+    pwd varchar(50) NOT NULL COMMENT '密码',
     user_oid varchar(50) NOT NULL COMMENT '用户oid',
-    status int(11) NOT NULL DEFAULT '1' COMMENT '用户状态 1正常， 2异常',
+    status int NOT NULL DEFAULT '1' COMMENT '用户状态 1正常， 2异常',
     create_time datetime DEFAULT NULL COMMENT '创建时间',
     login_time datetime DEFAULT NULL COMMENT '登录时间，每次登录都会刷新',
-    motto varchar(50) DEFAULT NULL COMMENT '座右铭',
+    slogan varchar(50) DEFAULT NULL COMMENT '座右铭',
     PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表'`,
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表'`,
 };
 const tableArr = ['xzh_blog','xzh_blog_category','xzh_blog_comments','xzh_user'];
 

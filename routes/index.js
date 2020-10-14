@@ -7,4 +7,9 @@ const commonController = require('../controller/commonController.js');
  */
 router.post('/api/upload', koaBody(),commonController.postUpload);
 
+/**
+ * @description 上传图片
+ */
+router.post('/api/token', commonController.getToken);
+
 module.exports = router;

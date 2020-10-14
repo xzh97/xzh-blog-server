@@ -12,19 +12,18 @@ const uuid = require('uuid');
 const blogController = {
     getBlogList: async (ctx,next) => {
         try {
-            let obj = ctx.params;
-            console.log(obj);
-
+            let {page = 1, size = 12} = ctx.query;
+            const limit = {page, size};
             //page & size 包装
-            const limit = obj.page || obj.size ? {
-                page: Number(obj.page) || 1,
-                size: Number(obj.size) || 12
-            } : null;
+            // const limit = obj.page || obj.size ? {
+            //     page: Number(obj.page) || 1,
+            //     size: Number(obj.size) || 12
+            // } : null;
 
-            delete obj['page'];
-            delete obj['size'];
+            // delete obj['page'];
+            // delete obj['size'];
 
-            const whereArr = transform2KeyValueArr(obj);
+            const whereArr = transform2KeyValueArr(ctx.params);
             await blogModel.getBlogListModel(whereArr,limit).then(result => {
                 console.log('controller getBlogList',result);
                 let {data,total} = result;

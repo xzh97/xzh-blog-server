@@ -4,9 +4,19 @@ const koaStatic = require('koa-static');
 const path = require('path');
 const config = require('./config/index');
 const init = require('./sql/db');
+const jwt = require('jsonwebtoken');
+
+const blogRouter = require('./routes/blog.js');
+const commonRouter = require('./routes/index.js');
+const userRouter = require('./routes/user.js');
 
 // 创建一个Koa对象表示web app本身:
 const app = new Koa();
+
+// 配置静态资源加载中间件
+app.use(koaStatic(path.join(__dirname , './static')))
+
+// 配置文件上传处理中间件
 app.use(koaBody(
   {
     multipart: true,
@@ -17,11 +27,57 @@ app.use(koaBody(
   }
 ));
 
-const blogRouter = require('./routes/blog.js');
-const commonRouter = require('./routes/index.js');
 
 //初始化sql表
 init();
+
+//请求参数处理
+app.use(async (ctx, next) => {
+  let params;
+  if(typeof ctx.request.body === 'string') {
+    params = JSON.parse(ctx.request.body);
+  }
+  else if(typeof ctx.request.body === 'object'){
+    params = ctx.request.body;
+  }
+  ctx.params = {
+    ...params,
+    // ...ctx.query
+  };
+  await next();
+});
+
+// 获取token接口和注册接口不需要进行token验证
+app.use(
+  async (ctx, next) => {
+    let ignorePaths = ['/api/token', '/api/register'];
+    if(!ignorePaths.includes(ctx.url)){
+      // console.log(ctx);
+      const token = ctx.header && ctx.header.authorization && ctx.header.authorization.substr(7);
+      // console.log(token);
+      await jwt.verify(token, 'xzh19971005',{algorithms: ['HS256'],}, (err, decoded) => {
+        console.log('token decoded err', err)
+        if(err){
+          ctx.status = 401;
+          ctx.response.body = {
+            errCode: err.name,
+            errMsg: err.message,
+          }
+        }
+        else{
+          // token校验通过
+          next();
+        }
+      })
+    }
+  }
+);
+
+// 全局error处理
+app.use(async (ctx, next) => {
+  // todo 看下要怎么做全局处理错误这块
+})
+
 // 配置跨域
 if(process.env.NODE_ENV === 'prod'){
   app.use(async (ctx, next) => {
@@ -52,28 +108,9 @@ else{
   // dev环境配置
 }
 
-
-//get和post请求参数(感觉这样子又不是很好QAQ 参数都混到一起了TAT)
-app.use(async (ctx, next) => {
-  let params;
-  if(typeof ctx.request.body === 'string') {
-    params = JSON.parse(ctx.request.body);
-  }
-  else if(typeof ctx.request.body === 'object'){
-    params = ctx.request.body;
-  }
-    ctx.params = {
-      ...params,
-      ...ctx.query
-    };
-    await next();
-  });
-
-// 配置静态资源加载中间件
-app.use(koaStatic(path.join(__dirname , './static')))
-
 app.use(blogRouter.routes());
 app.use(commonRouter.routes());
+app.use(userRouter.routes());
 
 // 在端口3000监听:
 app.listen(config.port);

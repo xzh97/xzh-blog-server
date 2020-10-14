@@ -1,7 +1,7 @@
 {
-  "name": "xzh.com.server",
+  "name": "xzh-blog-server",
   "version": "1.0.0",
-  "description": "project xzh.com's server",
+  "description": "project xzh-blog's server",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/xzh97/xzh.com.server#readme",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
     "koa-router": "^7.4.0",
