@@ -7,7 +7,7 @@ const init = require('./sql/db');
 const jwt = require('jsonwebtoken');
 
 const blogRouter = require('./routes/blog.js');
-const commonRouter = require('./routes/index.js');
+const commonRouter = require('./routes/common.js');
 const userRouter = require('./routes/user.js');
 
 // 创建一个Koa对象表示web app本身:
@@ -47,36 +47,37 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-// 获取token接口和注册接口不需要进行token验证
+// ! 进行token验证 登录和注册接口不需要
 app.use(
   async (ctx, next) => {
     let ignorePaths = ['/api/token', '/api/register'];
+    console.log(ctx.url);
     if(!ignorePaths.includes(ctx.url)){
-      // console.log(ctx);
+      
       const token = ctx.header && ctx.header.authorization && ctx.header.authorization.substr(7);
       // console.log(token);
-      await jwt.verify(token, 'xzh19971005',{algorithms: ['HS256'],}, (err, decoded) => {
-        console.log('token decoded err', err)
+      jwt.verify(token, 'xzh19971005',{algorithms: ['HS256'],}, (err, decoded) => {
+        console.log('token decoded err', err);
+        console.log('token decoded', decoded);
         if(err){
+          // token校验失败
           ctx.status = 401;
           ctx.response.body = {
             errCode: err.name,
             errMsg: err.message,
           }
         }
-        else{
-          // token校验通过
-          next();
-        }
       })
     }
+    await next();
   }
 );
 
 // 全局error处理
-app.use(async (ctx, next) => {
-  // todo 看下要怎么做全局处理错误这块
-})
+// app.use(async (ctx, next) => {
+//   // todo 看下要怎么做全局处理错误这块
+//   next();
+// })
 
 // 配置跨域
 if(process.env.NODE_ENV === 'prod'){

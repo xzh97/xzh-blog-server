@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const blogController = require('../controller/blogController.js');
+const blogController = require('../controller/blog.js');
 
 /**
  * @description 文章列表
