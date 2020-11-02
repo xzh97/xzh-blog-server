@@ -6,31 +6,52 @@ const userController = {
     getUser: async (ctx,next) => {
         let params = ctx.params;
         console.log(params);
-        // let result = await getUserInfo();
-        ctx.body = {
-            nickname: '夕至',
-            slogan: '何须仰望他人，自己亦是风景！',
-            createTime: '2020-10-11 14:30:00',
-            userOID: '1273bcd0-d7ec-11ea-82f3-dd24538a5141'
-        }
+        let result = await userModel.getUserModel(params);
+        ctx.body = result
+        next();
     },
+    
     addUser: async(ctx, next) => {
-        try{
+        let values = ctx.params;
+        values.userOid = uuid.v1();
+        values.createTime = values.loginTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
+        values.nickname = randomNickName();
+        const randomNickName = () => {
+            const surnameArr = [
+                '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯',
+                '陈', '褚', '卫', '蒋', '沈', '韩', '杨', '朱', '秦',
+                '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严',
+                '华', '金', '魏', '陶', '姜', '戚', '谢', '邹', '喻',
+                '柏', '水', '窦', '章', '云', '苏', '潘', '葛', '奚',
+                '范', '彭', '郎', '鲁', '韦', '昌', '马', '苗', '凤',
+                '花', '方', '俞', '任', '袁', '柳', '酆', '鲍', '史',
+                '唐', '费', '廉', '岑', '薛', '雷', '贺', '倪', '汤',
+                '滕', '殷', '罗', '毕', '郝', '邬', '安', '常', '乐',
+                '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余',
+                '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹'
+            ];
+            // 狗剩狗蛋翠花秀琴秀花美丽翠花铁柱铁牛旺财富贵
+            const nameArr = [
+                '狗剩', '狗蛋',
+                '翠花', '秀琴',
+                '秀花', '美丽',
+                '翠花', '铁柱',
+                '铁牛', '旺财',
+                '二狗','富贵'
+            ]
 
-            let values = ctx.params;
-            values.userOid = uuid.v1();
-            values.createTime = values.loginTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
-            values.nickname = '夕至';
+            const getRandomNumber = length => Math.floor(Math.random() * length);
 
-            await userModel.addUserModel(checkPostData(values)).then(result => {
-                console.log(result);
-                ctx.response.body = result;
-                next()
-            })
-        }catch(e){
-            console.error(e);
-            return getErrorMessage('SYSTEM_ERROR')
-        } 
+            return surnameArr[getRandomNumber(surnameArr.length)] + nameArr[getRandomNumber(nameArr.length)]
+            
+        }
+
+        await userModel.addUserModel(checkPostData(values)).then(result => {
+            console.log(result);
+            ctx.response.body = result;
+            next()
+        })
+        
     },
 
     getToken: async (ctx, next) => {
@@ -49,6 +70,7 @@ const userController = {
             let jwtPayload = {
                 sub: '',
                 userOID: userInfo.length && userInfo[0].userOID,
+                userId: userInfo.length && userInfo[0].id,
                 
             };
             let jwtOptions = {

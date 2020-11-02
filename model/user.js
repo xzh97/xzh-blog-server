@@ -6,7 +6,8 @@ const userModel = {
         delete params.password;
         delete params.type;
         let whereArr = transform2KeyValueArr(params);
-        let user = await getData('xzh_user','*',whereArr);
+        let fieldsStr = 'id,user_oid,nickname,status,slogan';
+        let user = await getData('xzh_user',fieldsStr,whereArr);
         return user;
     },
     addUserModel: async (values) => {

@@ -71,12 +71,17 @@ const pagination = (total,data,currentPage,size) => {
     }
 }
 
+const isObject = (obj) => {
+    return typeof obj === 'object' && obj !== null
+}
+
 /** 
  * @description 判断是否是空对象
  * @param {object} 判断对象
  * @return {boolean}
 */
 const isEmptyObj = (obj) => {
+    if(!isObject(obj)) return;
     for(let key in obj){
         return false;
     }
