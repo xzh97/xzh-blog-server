@@ -48,30 +48,30 @@ app.use(async (ctx, next) => {
 });
 
 // ! 进行token验证 登录和注册接口不需要
-app.use(
-  async (ctx, next) => {
-    let ignorePaths = ['/api/token', '/api/register'];
-    console.log(ctx.url);
-    if(!ignorePaths.includes(ctx.url)){
+// app.use(
+//   async (ctx, next) => {
+//     let ignorePaths = ['/api/token', '/api/register'];
+//     console.log(ctx.url);
+//     if(!ignorePaths.includes(ctx.url)){
       
-      const token = ctx.header && ctx.header.authorization && ctx.header.authorization.substr(7);
-      // console.log(token);
-      jwt.verify(token, 'xzh19971005',{algorithms: ['HS256'],}, (err, decoded) => {
-        console.log('token decoded err', err);
-        console.log('token decoded', decoded);
-        if(err){
-          // token校验失败
-          ctx.status = 401;
-          ctx.response.body = {
-            errCode: err.name,
-            errMsg: err.message,
-          }
-        }
-      })
-    }
-    await next();
-  }
-);
+//       const token = ctx.header && ctx.header.authorization && ctx.header.authorization.substr(7);
+//       // console.log(token);
+//       jwt.verify(token, 'xzh19971005',{algorithms: ['HS256'],}, (err, decoded) => {
+//         console.log('token decoded err', err);
+//         console.log('token decoded', decoded);
+//         if(err){
+//           // token校验失败
+//           ctx.status = 401;
+//           ctx.body = {
+//             errCode: err.name,
+//             errMsg: err.message,
+//           }
+//         }
+//       })
+//     }
+//     await next();
+//   }
+// );
 
 // 全局error处理
 // app.use(async (ctx, next) => {

@@ -71,7 +71,7 @@ const getDataListCount = async (table,key = '*',params) => {
  * @param {Array} params 查询条件key名  ex:[key:'name',value:'xzh']
  */
 const getData = async (table, selectStr = '*', params) => {
-    let where = transform2KeyValueStr(params);
+    let where = transform2KeyValueStr(params, ' AND ');
     let _sql = `SELECT ${selectStr} FROM ${table} WHERE ${where}`;
 
     return await query(_sql);

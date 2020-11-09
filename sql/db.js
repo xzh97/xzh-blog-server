@@ -47,7 +47,7 @@ const sqlMap = {
     id int NOT NULL AUTO_INCREMENT COMMENT 'id',
     account varchar(20) NOT NULL COMMENT '账号',
     nickname varchar(20) NOT NULL DEFAULT 'xzh' COMMENT '昵称',
-    pwd varchar(50) NOT NULL COMMENT '密码',
+    password varchar(50) NOT NULL COMMENT '密码',
     user_oid varchar(50) NOT NULL COMMENT '用户oid',
     status int NOT NULL DEFAULT '1' COMMENT '用户状态 1正常， 2异常',
     create_time datetime DEFAULT NULL COMMENT '创建时间',

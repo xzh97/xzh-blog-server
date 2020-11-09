@@ -1,7 +1,43 @@
-const {checkPostData} = require('../common/utils');
 const jwt = require('jsonwebtoken');
+const uuid = require('uuid');
+
+const {checkPostData, dateFormat, transform2KeyValueArr} = require('../common/utils');
+const {decode} = require('../common/encrypt');
+
 const userModel = require('../model/user');
 const userController = {
+
+    getToken: async (ctx, next) => {
+        let params = ctx.params;
+        params.password = decode(params.password, 1);
+        delete params.type;
+        let userInfo = await userModel.getUserModel(params);
+        console.log(userInfo[0]);
+        if(!userInfo.length){
+            ctx.status = 400;
+            ctx.body = {
+                errCode: 'ACCOUNT_ERROR',
+                errMsg: '登录失败，账号/密码不正确'
+            }
+        }
+        else{
+            let jwtPayload = {
+                sub: '',
+                userOID: userInfo.length && userInfo[0].userOID,
+                userId: userInfo.length && userInfo[0].id,
+                
+            };
+            let jwtOptions = {
+                expiresIn: '1h',
+            }
+            const token = jwt.sign(jwtPayload, 'xzh19971005', jwtOptions)
+            
+            ctx.body = {
+                token
+            }
+        }
+        next();
+    },
     
     getUser: async (ctx,next) => {
         let params = ctx.params;
@@ -13,9 +49,12 @@ const userController = {
     
     addUser: async(ctx, next) => {
         let values = ctx.params;
+        values.password = decode(values.password, values.type);
         values.userOid = uuid.v1();
         values.createTime = values.loginTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
-        values.nickname = randomNickName();
+
+        delete values.type;
+
         const randomNickName = () => {
             const surnameArr = [
                 '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯',
@@ -37,7 +76,7 @@ const userController = {
                 '秀花', '美丽',
                 '翠花', '铁柱',
                 '铁牛', '旺财',
-                '二狗','富贵'
+                '二狗', '富贵',
             ]
 
             const getRandomNumber = length => Math.floor(Math.random() * length);
@@ -45,45 +84,40 @@ const userController = {
             return surnameArr[getRandomNumber(surnameArr.length)] + nameArr[getRandomNumber(nameArr.length)]
             
         }
-
+        values.nickname = randomNickName();
+ 
         await userModel.addUserModel(checkPostData(values)).then(result => {
             console.log(result);
-            ctx.response.body = result;
-            next()
+            ctx.body = result;
         })
+        next()
         
     },
 
-    getToken: async (ctx, next) => {
+    updateUser: async (ctx, next) => {
         let params = ctx.params;
-        
-        let userInfo = await userModel.getUserModel(params);
-        console.log(userInfo[0]);
-        if(!userInfo.length){
-            ctx.status = 400;
-            ctx.response.body = {
-                errCode: 'ACCOUNT_ERROR',
-                errMsg: '登录失败，账号/密码不正确'
+        params = checkPostData(params);
+        let whereArr = transform2KeyValueArr({
+            userOid: params.userOid
+        });
+        let updateArr = transform2KeyValueArr(params);
+        await userModel.updateUserModel(updateArr, whereArr).then(res => {
+            if(res.code === 'ER_PARSE_ERROR'){
+                ctx.status = 500;
             }
-        }
-        else{
-            let jwtPayload = {
-                sub: '',
-                userOID: userInfo.length && userInfo[0].userOID,
-                userId: userInfo.length && userInfo[0].id,
-                
-            };
-            let jwtOptions = {
-                expiresIn: '1h',
-            }
-            const token = jwt.sign(jwtPayload, 'xzh19971005', jwtOptions)
-            
-            ctx.response.body = {
-                token
-            }
-        }
+            ctx.body = res;
+        })
         next();
-    }
+    },
+
+    deleteUser: async (ctx, next) => {
+        let params = ctx.params;
+        let whereArr = transform2KeyValueArr(params);
+        await blogModel.deleteBlogModel(whereArr).then(result => {
+            ctx.body = result;
+        })
+        next()
+    },
 }
 
 module.exports = userController;

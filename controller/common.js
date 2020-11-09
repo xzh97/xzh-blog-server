@@ -4,7 +4,7 @@ const commonController = {
     postUpload:async (ctx,next) => {
         let files = ctx.request.files.file;
         let fileUrl = await upload(files);
-        ctx.response.body = {
+        ctx.body = {
             fileUrl: fileUrl
         };
         next();

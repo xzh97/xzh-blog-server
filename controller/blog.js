@@ -31,7 +31,7 @@ const blogController = {
                 //无下一页
                 let {hasNextPage, hasPrevPage, totalPage } = pagination(total,data,limit.page,limit.size);
 
-                ctx.response.body = {
+                ctx.body = {
                     hasNextPage,
                     hasPrevPage,
                     totalPage,
@@ -62,7 +62,7 @@ const blogController = {
                 }
                 data[0].comments = assemblyComments(commentsList);
                 //console.log(data);
-                ctx.response.body = data[0];
+                ctx.body = data[0];
                 next()
             })
         }catch (e) {
@@ -79,7 +79,7 @@ const blogController = {
             values.description = removeTag(values.content);
             await blogModel.createNewBlogModel(checkPostData(values)).then(result => {
                 console.log(result);
-                ctx.response.body = result;
+                ctx.body = result;
                 next()
             })
         }catch(e){
@@ -99,7 +99,7 @@ const blogController = {
             });
             let updateArr = transform2KeyValueArr(obj);
             await blogModel.updateBlogModel(updateArr,whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.body = result;
                 if(result.code === 'ER_PARSE_ERROR'){
                     ctx.response.status = 500;
                 }
@@ -116,7 +116,7 @@ const blogController = {
             let whereArr = transform2KeyValueArr(obj);
             console.log('blogController deleteBlog params',obj);
             await blogModel.deleteBlogModel(whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.body = result;
                 next()
             })
         }catch(e){
@@ -136,7 +136,7 @@ const blogController = {
             } : null;
             const whereArr = transform2KeyValueArr(obj);
             await blogModel.getCategoriesModel(whereArr,limit).then(result => {
-                ctx.response.body = result;
+                ctx.body = result;
                 next()
             })
         }catch (e) {
@@ -149,7 +149,7 @@ const blogController = {
             let obj = ctx.params;
             let where = transform2KeyValueArr(obj);
             await blogModel.getCategoryDetailModel(where).then(result => {
-                ctx.response.body = result[0];
+                ctx.body = result[0];
                 next()
             })
         }catch (e) {
@@ -163,7 +163,7 @@ const blogController = {
             obj.categoryOid = uuid.v1();
             obj.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
             await blogModel.createNewCategoryModel(obj).then(result => {
-                ctx.response.body = result;
+                ctx.body = result;
                 result.errCode === 10010 && (ctx.response.status = 500);
                 next()
             })
@@ -181,7 +181,7 @@ const blogController = {
             let whereArr = transform2KeyValueArr(whereObj);
             let updateArr = transform2KeyValueArr(obj);
             await blogModel.updateCategoryModel(updateArr,whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.body = result;
                 result.errCode === 10010 && (ctx.response.status = 500);
                 next()
             })
@@ -196,7 +196,7 @@ const blogController = {
             let whereArr = transform2KeyValueArr(obj);
             console.log('blogController deleteCategory',obj);
             await blogModel.deleteCategoryModel(whereArr).then(result => {
-                ctx.response.body = result;
+                ctx.body = result;
                 result.errCode === 10010 && (ctx.response.status = 500);
                 next()
             })
@@ -212,7 +212,7 @@ const blogController = {
             obj.commentOid = uuid.v1();
             obj.createTime = dateFormat(new Date(),'yyyy-MM-dd hh:mm:ss');
             await blogModel.addNewCommentModel(obj).then(result => {
-                ctx.response.body = result;
+                ctx.body = result;
                 next()
             })
         }catch (e) {
