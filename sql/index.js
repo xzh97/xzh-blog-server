@@ -98,7 +98,7 @@ const insertData = async (table, values) => {
  */
 const updateData = async (table, updateArr, whereArr) => {
     let updateStr = transform2KeyValueStr(updateArr);
-    let whereStr = transform2KeyValueStr(whereArr);
+    let whereStr = transform2KeyValueStr(whereArr, ' AND ');
     let _sql = `UPDATE ${table} SET ${updateStr} WHERE ${whereStr};`;
     return await query(_sql)
 }
@@ -109,7 +109,7 @@ const updateData = async (table, updateArr, whereArr) => {
  * @param {Array} whereArr where子句条件
  */
 const deleteData = async (table, whereArr) => {
-    let whereStr = transform2KeyValueStr(whereArr);
+    let whereStr = transform2KeyValueStr(whereArr, ' AND ');
     let _sql = `DELETE FROM ${table} WHERE ${whereStr};`;
     return await query(_sql)
 }
