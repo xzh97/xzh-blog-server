@@ -9,7 +9,7 @@ router.post('/api/token', userController.getToken);
 /**
  * @description 获取用户信息
  */
-router.post('/api/user/detail/:userOid', userController.getUser);
+router.get('/api/user/detail/:userOid', userController.getUser);
 
 /**
  * @description 新增用户

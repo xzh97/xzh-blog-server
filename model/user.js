@@ -37,13 +37,15 @@ const updateUserModel = async (updateArr,whereArr) => {
     })
 };
 
-const deleteUserModel = async (updateArr,whereArr) => {
+// 逻辑删除 不删库
+const deleteUserModel = async (whereArr) => {
+    let updateArr = [{key: 'status', value: 2}];
     return await updateData('xzh_user',updateArr,whereArr).then(res => {
         if(res.affectedRows > 0){
-            return getErrorMessage('UPDATE_SUCCESS');
+            return getErrorMessage('DELETE_SUCCESS');
         }
         else{
-            return getErrorMessage('UPDATE_FAILED',res);
+            return getErrorMessage('DELETE_FAILED',res);
         }
     })
 };
@@ -51,5 +53,6 @@ const deleteUserModel = async (updateArr,whereArr) => {
 module.exports = {
     getUserModel,
     addUserModel,
-    updateUserModel
+    updateUserModel,
+    deleteUserModel
 }

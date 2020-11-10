@@ -43,7 +43,7 @@ const userController = {
         let params = ctx.params;
         console.log(params);
         let result = await userModel.getUserModel(params);
-        ctx.body = result
+        ctx.body = result[0]
         next();
     },
     
@@ -113,7 +113,7 @@ const userController = {
     deleteUser: async (ctx, next) => {
         let params = ctx.params;
         let whereArr = transform2KeyValueArr(params);
-        await blogModel.deleteBlogModel(whereArr).then(result => {
+        await userModel.deleteUserModel(whereArr).then(result => {
             ctx.body = result;
         })
         next()
