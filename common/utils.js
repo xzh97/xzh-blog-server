@@ -213,17 +213,6 @@ const transform2KeyValueStr = (arr = [], char = ',') => {
 };
 
 /**
- * @desc 处理sql错误
- * @param err 数据
- * */
-const errorHandler = (err) => {
-    console.log('errorHandler',err);
-    if(err.code === 'ER_PARSE_ERROR'){
-        return getErrorMessage(err.code,err)
-    }
-};
-
-/**
  * @desc 检查接口入库数据 在post，put请求使用
  * @param res 传入的数据
  * @return {*}
@@ -265,7 +254,6 @@ module.exports = {
     filterCamel,
     transform2KeyValueArr,
     transform2KeyValueStr,
-    errorHandler,
     checkPostData,
     modelWrapper,
 };

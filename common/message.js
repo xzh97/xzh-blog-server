@@ -18,6 +18,8 @@ const errorMessageMap = {
     'UPLOAD_ERROR':'上传失败',
     'ER_PARSE_ERROR':'SQL错误',
     'ER_ACCOUNT_REPEAT': '该用户名已经被注册了',
+    'ER_ACCOUNT_OR_PASSWORD': '账号/密码不正确',
+    'ACCOUNT_DELETED': '该用户已注销'
 }
 const errorCodeMap = {
     'CREATE_SUCCESS': 10001,
@@ -31,6 +33,8 @@ const errorCodeMap = {
     'UPLOAD_ERROR':10009,
     'ER_PARSE_ERROR':10010,
     'ER_ACCOUNT_REPEAT': 10011,
+    'ER_ACCOUNT_OR_PASSWORD': 10012,
+    'ACCOUNT_DELETED': 10013,
 }
 
 const getErrorMessage = (key,errData)=>{

@@ -1,6 +1,6 @@
 const {getDataListCount, getDataList, getData, insertData, updateData, deleteData} = require('../sql/index');
 const getErrorMessage = require('../common/message');
-const { transform2KeyValueArr, replaceUnderlineOrCamel} = require('../common/utils');
+const { transform2KeyValueArr} = require('../common/utils');
 
 /**
  * 
@@ -19,9 +19,7 @@ const { transform2KeyValueArr, replaceUnderlineOrCamel} = require('../common/uti
  */
 const getCategoriesModel = async (params,limit) => {
     let keys = 'category_oid,name,create_time,count';
-    return await getDataList('xzh_blog_category',keys,params,limit).then(res => {
-        return res.map(row => replaceUnderlineOrCamel(row,false));
-    })
+    return await getDataList('xzh_blog_category',keys,params,limit)
 };
 
 /**
@@ -31,9 +29,7 @@ const getCategoriesModel = async (params,limit) => {
  */
 const getCategoryDetailModel = async (params) => {
     let fieldsStr = 'category_oid,name,create_time,count';
-    return await getData('xzh_blog_category', fieldsStr, params).then(res => {
-        return res.map(row => replaceUnderlineOrCamel(row,false));
-    })
+    return await getData('xzh_blog_category', fieldsStr, params)
 };
 
 /**
@@ -96,7 +92,7 @@ const getBlogListModel = async (params,limit) => {
     let keys = 'type,blog_oid,description,read_number,category_oid,comment_count,title,create_time';
     return await Promise.all([getDataList('xzh_blog',keys,params,limit), getDataListCount('xzh_blog','blog_oid',params)]).then(res => {
         let [data,total] = res;
-         data.map(row => replaceUnderlineOrCamel(row,false)).reverse();
+         data.reverse();
          total = total[0]['count(blog_oid)'];
          return {data,total};
     })
@@ -111,12 +107,6 @@ const getBlogDetailModel = async (params) => {
     let fieldsStr = 'title,content,category_oid,type,private,blog_oid,read_number,comment_count,last_updated_time,status';
     return await Promise.all([getData('xzh_blog', fieldsStr, params), getBlogComments(params)]).then(res => {
         let [data, commentsList] = res;
-        data.map(item => {
-            return replaceUnderlineOrCamel(item,false);
-        });
-        commentsList.map(item => {
-            return replaceUnderlineOrCamel(item,false);
-        });
         return [data, commentsList];
     })
 };

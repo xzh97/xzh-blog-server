@@ -5,6 +5,7 @@ const {checkPostData, dateFormat, transform2KeyValueArr} = require('../common/ut
 const {decode} = require('../common/encrypt');
 
 const userModel = require('../model/user');
+const getErrorMessage = require('../common/message');
 const userController = {
 
     getToken: async (ctx, next) => {
@@ -15,16 +16,13 @@ const userController = {
         console.log(userInfo[0]);
         if(!userInfo.length){
             ctx.status = 400;
-            ctx.body = {
-                errCode: 'ACCOUNT_ERROR',
-                errMsg: '登录失败，账号/密码不正确'
-            }
+            ctx.body = getErrorMessage('ER_ACCOUNT_OR_PASSWORD')
         }
         else{
             let jwtPayload = {
                 sub: '',
-                userOID: userInfo.length && userInfo[0].userOID,
-                userId: userInfo.length && userInfo[0].id,
+                userOID: userInfo && userInfo.userOID,
+                userId: userInfo && userInfo.id,
                 
             };
             let jwtOptions = {
@@ -43,7 +41,7 @@ const userController = {
         let params = ctx.params;
         console.log(params);
         let result = await userModel.getUserModel(params);
-        ctx.body = result[0]
+        ctx.body = result
         next();
     },
     
@@ -112,10 +110,18 @@ const userController = {
 
     deleteUser: async (ctx, next) => {
         let params = ctx.params;
-        let whereArr = transform2KeyValueArr(params);
-        await userModel.deleteUserModel(whereArr).then(result => {
-            ctx.body = result;
-        })
+        let userInfo = await userModel.getUserModel(params).then(res => res[0]);
+        if(userInfo.status === 2){
+            // 已经逻辑删除过了
+            ctx.body = getErrorMessage('ACCOUNT_DELETED');
+        }
+        else{
+            let whereArr = transform2KeyValueArr(params);
+            await userModel.deleteUserModel(whereArr).then(result => {
+                ctx.body = result;
+            })
+        }
+        
         next()
     },
 }

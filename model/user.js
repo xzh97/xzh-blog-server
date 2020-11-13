@@ -6,7 +6,7 @@ const getUserModel = async (params) => {
     let whereArr = transform2KeyValueArr(params);
     let fieldsStr = 'id,user_oid,nickname,status,slogan';
     let user = await getData('xzh_user', fieldsStr, whereArr);
-    return user;
+    return user[0]
 }
 
 const addUserModel = async (values) => {

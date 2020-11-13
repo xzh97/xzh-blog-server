@@ -1,6 +1,6 @@
 const config = require('../config/index');
 const mysql = require('mysql');
-const { errorHandler, transform2KeyValueStr, filterCamel, } = require('../common/utils');
+const { transform2KeyValueStr, filterCamel, replaceUnderlineOrCamel, } = require('../common/utils');
 
 const pool = mysql.createPool(config.database); //创建连接池
 
@@ -16,7 +16,7 @@ const query = (sql, values) => {
                 connection.query(sql, values, (err, rows) => {
                     if (err) {
                         console.log('query err',err);
-                        reject(errorHandler(err))
+                        reject(sqlErrorHandler(err))
                     }
                     else {
                         resolve(rows)
@@ -26,8 +26,26 @@ const query = (sql, values) => {
                 connection.release() //关闭连接
             }
         })
+    }).then(res => {
+        console.log('初步处理sql结果', res);
+        // 这里基本可以限定是查找数据  因为其它的都是res.affectedRows这样子判断
+        if(Array.isArray(res) && res.length){
+            return res.map(row => replaceUnderlineOrCamel(row, false))
+        }
+        return res
     })
 }
+
+/**
+ * @desc 处理sql错误
+ * @param err 数据
+ * */
+const sqlErrorHandler = (err) => {
+    console.log('sqlErrorHandler',err);
+    if(err.code === 'ER_PARSE_ERROR'){
+        return getErrorMessage(err.code,err)
+    }
+};
 
 /**
  * @summary 查询数据(可分页)
