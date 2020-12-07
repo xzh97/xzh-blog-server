@@ -44,3 +44,4 @@ src/config/dist.js
 */.DS_Store
 package-lock.json
 static/
+config/prod.js
