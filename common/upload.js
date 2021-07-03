@@ -21,8 +21,9 @@ const upload = file => {
 const UploadPath = (fileUrl,fileName) => {
     let dirPath = parentPath + fileUrl;
     console.log('UploadPath dirPath',dirPath);
+    console.log('是否存在该路径',!fs.existsSync(dirPath))
     if(!fs.existsSync(dirPath)){
-        fs.mkdirSync(dirPath);
+        fs.mkdirSync(dirPath, {recursive: true});
         return path.join(dirPath + fileName);
     }
     else{
