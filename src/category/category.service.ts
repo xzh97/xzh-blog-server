@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +14,12 @@ export class CategoryService {
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
+    const qb = this.categoryRepo.createQueryBuilder();
+    qb.where('category.name = :name', { name: createCategoryDto.name });
+    const exist = await qb.getExists();
+    if (exist) {
+      throw new HttpException('分类名称已存在', HttpStatus.BAD_REQUEST);
+    }
     this.categoryRepo.save(createCategoryDto);
   }
 
@@ -21,7 +27,6 @@ export class CategoryService {
     const qb = this.categoryRepo.createQueryBuilder('category');
     const list = await qb.getMany();
     const count = await qb.getCount();
-    console.log(list);
     return {
       list,
       count,
@@ -37,7 +42,13 @@ export class CategoryService {
     return item;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    const qb = this.categoryRepo.createQueryBuilder('category');
+    qb.where('category.id = :id', { id });
+    const exist = await qb.getExists();
+    if (!exist) {
+      throw new HttpException(`id为${id}的分类不存在`, HttpStatus.BAD_REQUEST);
+    }
     return this.categoryRepo.update(id, updateCategoryDto);
   }
 

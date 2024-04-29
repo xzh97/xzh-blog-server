@@ -1,5 +1,5 @@
 import { Category } from 'src/category/entities/category.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
 @Entity()
 export class Blog {
   @PrimaryGeneratedColumn()
@@ -51,9 +51,9 @@ export class Blog {
   })
   author: string;
 
-  @ManyToMany(() => Category, { eager: true })
-  @JoinTable()
-  category: Category[];
+  @ManyToOne(() => Category, category => category.blogs)
+  @JoinColumn()
+  category: Category;
 
   @Column({
     default: 0,

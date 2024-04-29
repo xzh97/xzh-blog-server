@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,8 +13,14 @@ export class BlogService {
     private blogRepo: Repository<Blog>
   ) {}
 
-  create(createBlogDto: CreateBlogDto): void {
-    this.blogRepo.create(createBlogDto);
+  async create(createBlogDto: CreateBlogDto) {
+    const qb = this.blogRepo.createQueryBuilder();
+    qb.where('blog.title = :title', { title: createBlogDto.title });
+    const exist = await qb.getExists();
+    if (exist) {
+      throw new HttpException('文章名称已存在', HttpStatus.BAD_REQUEST);
+    }
+    return this.blogRepo.create(createBlogDto);
   }
 
   async findAll(): Promise<ListCommon<Blog>> {
@@ -31,14 +37,18 @@ export class BlogService {
     if (!id) {
       return null;
     }
-    const blogItem = await this.blogRepo
-      .createQueryBuilder('blog')
-      .where('blog.id = :id', { id })
-      .getOne();
+    const qb = this.blogRepo.createQueryBuilder('blog');
+    const blogItem = await qb.where('blog.id = :id', { id }).getOne();
     return blogItem;
   }
 
-  update(id: number, updateBlogDto: UpdateBlogDto) {
+  async update(id: number, updateBlogDto: UpdateBlogDto) {
+    const qb = this.blogRepo.createQueryBuilder('blog');
+    qb.where('blog.id = :id', { id });
+    const exist = await qb.getExists();
+    if (!exist) {
+      throw new HttpException(`id为${id}的文章不存在`, HttpStatus.BAD_REQUEST);
+    }
     this.blogRepo.update(id, updateBlogDto);
   }
 

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Blog } from 'src/blog/entities/blog.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Category {
@@ -23,4 +24,7 @@ export class Category {
     comment: '分类状态 0为正常情况 1删除',
   })
   status: number;
+
+  @OneToMany(() => Blog, blogs => blogs.category)
+  blogs: Blog[];
 }
