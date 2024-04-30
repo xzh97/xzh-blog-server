@@ -15,7 +15,7 @@ import { LoggerMiddleware } from './core/middleware/logger/logger.middleware';
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      database: 'xizh',
+      database: 'xizh_test',
       username: 'root',
       password: 'z995194437',
       entities: [Blog, Category],

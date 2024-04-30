@@ -20,7 +20,7 @@ export class BlogService {
     if (exist) {
       throw new HttpException('文章名称已存在', HttpStatus.BAD_REQUEST);
     }
-    return this.blogRepo.create(createBlogDto);
+    return await this.blogRepo.save(createBlogDto);
   }
 
   async findAll(): Promise<ListCommon<Blog>> {
@@ -38,7 +38,11 @@ export class BlogService {
       return null;
     }
     const qb = this.blogRepo.createQueryBuilder('blog');
-    const blogItem = await qb.where('blog.id = :id', { id }).getOne();
+
+    const blogItem = await qb
+      .leftJoinAndSelect('blog.category', 'category')
+      .where('blog.id = :id', { id })
+      .getOne();
     return blogItem;
   }
 
@@ -49,7 +53,13 @@ export class BlogService {
     if (!exist) {
       throw new HttpException(`id为${id}的文章不存在`, HttpStatus.BAD_REQUEST);
     }
-    this.blogRepo.update(id, updateBlogDto);
+
+    const updateRes = await this.blogRepo.update(id, updateBlogDto);
+    if (updateRes.affected > 1) {
+      const res = qb.getOne();
+      return res;
+    }
+    return updateRes;
   }
 
   async remove(id: number): Promise<void> {

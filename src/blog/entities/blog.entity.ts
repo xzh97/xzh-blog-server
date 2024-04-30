@@ -18,8 +18,10 @@ export class Blog {
   title: string;
 
   // 博客封面
-  @Column()
-  poster?: string;
+  @Column({
+    default: 'default.png',
+  })
+  poster: string;
 
   // 博客内容描述
   @Column()
@@ -42,6 +44,7 @@ export class Blog {
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updateTime: Date;
 

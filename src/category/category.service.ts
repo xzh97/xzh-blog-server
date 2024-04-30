@@ -20,7 +20,7 @@ export class CategoryService {
     if (exist) {
       throw new HttpException('分类名称已存在', HttpStatus.BAD_REQUEST);
     }
-    this.categoryRepo.save(createCategoryDto);
+    return await this.categoryRepo.save(createCategoryDto);
   }
 
   async findAll(): Promise<ListCommon<Category>> {
@@ -45,11 +45,29 @@ export class CategoryService {
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     const qb = this.categoryRepo.createQueryBuilder('category');
     qb.where('category.id = :id', { id });
-    const exist = await qb.getExists();
-    if (!exist) {
+    const rowExist = await qb.getExists();
+    if (!rowExist) {
       throw new HttpException(`id为${id}的分类不存在`, HttpStatus.BAD_REQUEST);
     }
-    return this.categoryRepo.update(id, updateCategoryDto);
+
+    qb.where('category.name = :name', { name: updateCategoryDto.name });
+    const nameRepeat = await qb.getExists();
+    console.log('repeat', nameRepeat);
+
+    if (nameRepeat) {
+      throw new HttpException('分类名称已存在', HttpStatus.BAD_REQUEST);
+    }
+    const res = await this.categoryRepo.update(id, updateCategoryDto);
+    console.log(res);
+
+    if (res.affected > 0) {
+      qb.where('category.id = :id', { id });
+      const updateRes = await qb.getOne();
+      console.log(updateRes);
+      return updateRes;
+    }
+
+    return res;
   }
 
   async remove(id: number) {
