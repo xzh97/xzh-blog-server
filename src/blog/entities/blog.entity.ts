@@ -1,5 +1,6 @@
 import { Category } from 'src/category/entities/category.entity';
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { CommentEntity } from 'src/comment/entities/comment.entity';
+import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 @Entity()
 export class Blog {
   @PrimaryGeneratedColumn()
@@ -63,4 +64,7 @@ export class Blog {
     comment: '博客状态 0为正常情况，1私密状态，2为逻辑删除',
   })
   status: number;
+
+  @OneToMany(() => CommentEntity, comments => comments.blog)
+  comments: CommentEntity[];
 }

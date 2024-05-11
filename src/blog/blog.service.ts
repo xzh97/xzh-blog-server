@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Blog } from './entities/blog.entity';
 import { Repository } from 'typeorm';
 import { ListCommon } from 'src/types/common';
+import { CommentEntity } from 'src/comment/entities/comment.entity';
 
 @Injectable()
 export class BlogService {
@@ -41,8 +42,23 @@ export class BlogService {
 
     const blogItem = await qb
       .leftJoinAndSelect('blog.category', 'category')
+      .leftJoinAndSelect('blog.comments', 'comment')
       .where('blog.id = :id', { id })
       .getOne();
+    function assemblyComment(comments: CommentEntity[]) {
+      let result = [],
+        reply = [],
+        children = [];
+      result = comments.filter(item => !item.parentId);
+      children = comments.filter(item => item.parentId);
+      reply = comments.filter(item => item.replyId);
+      // console.log('assemblyComments', children);
+      result.map(item => {
+        item.children = children.filter(item2 => item2.parentId === item.id) || [];
+      });
+      return result;
+    }
+    blogItem.comments = assemblyComment(blogItem.comments);
     return blogItem;
   }
 

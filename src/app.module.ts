@@ -3,27 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogModule } from './blog/blog.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Blog } from './blog/entities/blog.entity';
 import { CategoryModule } from './category/category.module';
-import { Category } from './category/entities/category.entity';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { HttpExceptionFilter } from './core/filter/http-exception/http-exception.filter';
 import { LoggerMiddleware } from './core/middleware/logger/logger.middleware';
+import { MysqlDataSource } from './dataSource';
+import { CommentModule } from './comment/comment.module';
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      database: 'xizh_test',
-      username: 'root',
-      password: 'z995194437',
-      entities: [Blog, Category],
-      synchronize: true,
-    }),
-    BlogModule,
-    CategoryModule,
-  ],
+  imports: [TypeOrmModule.forRoot(MysqlDataSource), BlogModule, CategoryModule, CommentModule],
   controllers: [AppController],
   providers: [
     AppService,
